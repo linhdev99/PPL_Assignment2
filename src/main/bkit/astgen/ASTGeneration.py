@@ -43,7 +43,7 @@ class ASTGeneration(BKITVisitor):
         m_varInit = None
         if ctx.array_lit():
             m_varInit = self.visitArrayLiteral(ctx.array_lit())
-            return VarDecl(m_variable,m_varDimen,m_varInit)
+            return VarDecl(m_variable,m_varDimen,ArrayLiteral(m_varInit))
         elif ctx.all_lit():
             m_varInit = self.visitAllLiteral(ctx.all_lit())
             return VarDecl(m_variable,m_varDimen,m_varInit)
@@ -109,10 +109,10 @@ class ASTGeneration(BKITVisitor):
         return None
 
     def visitIntLiteral(self, ctx:BKITParser.Int_litContext):
-        return IntLiteral(ctx.INTLIT().getText())
+        return IntLiteral(int(ctx.INTLIT().getText()))
 
     def visitFloatLiteral(self, ctx:BKITParser.Float_litContext):
-        return FloatLiteral(ctx.FLOATLIT().getText())
+        return FloatLiteral(float(ctx.FLOATLIT().getText()))
 
     def visitBooleanLiteral(self, ctx:BKITParser.Bool_litContext):
         if ctx.TRUE():
@@ -124,8 +124,39 @@ class ASTGeneration(BKITVisitor):
         return StringLiteral(ctx.STRINGLIT().getText())
 
     def visitArrayLiteral(self, ctx:BKITParser.Array_litContext):
-        return None
+        temp = []
+        for x in ctx.array_lit_cell():
+            temp.append(self.visitArrayLitCell(x))
+        return temp
 
+    def visitArrayLitCell(self,ctx:BKITParser.Array_lit_cellContext):
+        if ctx.all_lit():
+            return self.getOnlyValueLiteral(ctx.all_lit())
+        else:
+            return self.visitArrayLiteral(ctx.array_lit())
 
-    
+    def getOnlyValueLiteral(self,ctx:BKITParser.All_litContext):
+        if ctx.int_lit():
+            return self.visitValueIntLiteral(ctx.int_lit())
+        elif ctx.float_lit():
+            return self.visitValueFloatLiteral(ctx.float_lit())
+        elif ctx.string_lit():
+            return self.visitValueStringLiteral(ctx.string_lit())
+        elif ctx.bool_lit():
+            return self.visitValueBooleanLiteral(ctx.bool_lit())
+
+    def visitValueIntLiteral(self, ctx:BKITParser.Int_litContext):
+        return int(ctx.INTLIT().getText())
+
+    def visitValueFloatLiteral(self, ctx:BKITParser.Float_litContext):
+        return float(ctx.FLOATLIT().getText())
+
+    def visitValueBooleanLiteral(self, ctx:BKITParser.Bool_litContext):
+        if ctx.TRUE():
+            return ctx.TRUE().getText()
+        else:
+            return ctx.FALSE().getText()
+
+    def visitValueStringLiteral(self, ctx:BKITParser.String_litContext):
+        return ctx.STRINGLIT().getText()
 
