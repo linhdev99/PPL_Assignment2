@@ -62,3 +62,9 @@ class ASTGenSuite(unittest.TestCase):
         input = """Var:x[1][2][3], y[1][2] = {1,2};"""
         expect = Program([VarDecl(Id("x"),[1,2,3],None),VarDecl(Id("y"),[1,2],ArrayLiteral([1,2]))])
         self.assertTrue(TestAST.checkASTGen(input,expect,309))
+
+    def test_10(self):
+        """Simple program: int main() {} """
+        input = """Var:x[1][2][3], y[3] = {1,2,{1,2,3}};"""
+        expect = Program([VarDecl(Id("x"),[1,2,3],None),VarDecl(Id("y"),[3],ArrayLiteral([1,2,[1,2,3]]))])
+        self.assertTrue(TestAST.checkASTGen(input,expect,310))
