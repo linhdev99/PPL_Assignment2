@@ -898,7 +898,7 @@ Body:
         Return int_to_float(a*(b-x)) +. c[3];
     EndIf.
 EndBody."""
-        expect = "Error on line 5 col 31: ("
+        expect = "Error on line 5 col 32: ;"
         self.assertTrue(TestParser.checkParser(input, expect, 252))
 
     def test_53_err(self):

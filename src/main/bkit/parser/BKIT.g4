@@ -67,7 +67,7 @@ stmt_spe: assign_stmt SEMI
 body_declare: BODY COLON body* ENDBODY DOT;
 
 //assign statement
-assign_stmt: assign_part EQ (assign_part | exp);
+assign_stmt: assign_part EQ exp;
 assign_part: (scalar_var | ((func_call | STRINGLIT | array_cell)) index_var*);
 // function declare
 func_declare: FUNCTION COLON ID parameter_func? body_declare;
@@ -85,7 +85,7 @@ for_stmt: FOR LP ID EQ exp COMMA conditionExpr COMMA updateExpr RP DO body* ENDF
 
 //scalar-variable
 scalar_var: ID index_var*;
-index_var: LSB (scalar_var | exp)+ RSB;
+index_var: LSB exp RSB;
 
 //scalar-var-assign
 scalar_var_int: ID index_var_int*;

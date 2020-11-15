@@ -147,3 +147,37 @@ EndBody."""
                                  )
                     ])
         self.assertTrue(TestAST.checkASTGen(input,expect,323))
+
+    def test_24(self):
+        """Simple program: int main() {} """
+        input = """Var:x;
+Function: foo
+Parameter: x, y[5][2]
+Body:
+    Var: r = 3.14, e = 2.7e1;
+    a = 1 + (3-4) \ (4 + 3) * 4;
+EndBody."""
+        expect = Program(
+                    [
+                        VarDecl(Id("x"),[],None),
+                        FuncDecl(Id("foo"),
+                                 [
+                                     VarDecl(Id("x"),[],None),
+                                     VarDecl(Id("y"),[5,2],None)
+                                 ],
+                                    (
+                                        [
+                                            VarDecl(Id("r"),[],FloatLiteral(3.14)),
+                                            VarDecl(Id("e"),[],FloatLiteral(2.7e1))
+                                        ],
+                                        [
+                                            Assign
+                                            (
+                                                Id("a"),
+                                                Id("x")
+                                            )
+                                        ]
+                                    )
+                                 )
+                    ])
+        self.assertTrue(TestAST.checkASTGen(input,expect,324))
