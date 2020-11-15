@@ -59,6 +59,11 @@ class BKITVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by BKITParser#body.
+    def visitBody(self, ctx:BKITParser.BodyContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by BKITParser#stmt.
     def visitStmt(self, ctx:BKITParser.StmtContext):
         return self.visitChildren(ctx)
