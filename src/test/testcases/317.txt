@@ -1,1 +1,4 @@
-Var: x = True, y = 1.2e5, z = "hihi";
+Function: main 
+Body:
+    foo();
+EndBody.

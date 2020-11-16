@@ -1,6 +1,4 @@
-
-            Function: foo
-                Body:
-                    Var: x;
-                    foo (2 + x, 4. \. y);
-                EndBody.
+Function: main
+Body:
+    a = foo();
+EndBody.

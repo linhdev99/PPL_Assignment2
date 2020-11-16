@@ -1,5 +1,1 @@
-
-            Function: foo
-                Body:
-                    v = (4. \. 3.) *. 3.14 *. r;
-                EndBody.
+Var: a[2][3] = {{},{4,"text"},{}};

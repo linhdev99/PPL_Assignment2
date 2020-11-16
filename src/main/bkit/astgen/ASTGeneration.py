@@ -286,7 +286,8 @@ class ASTGeneration(BKITVisitor):
         if ctx.LP():
             return self.visitCallExpr(ctx.exp())
         elif ctx.func_call():
-            return self.visitFuncCall(ctx.func_call())
+            value = self.visitFuncCall(ctx.func_call())
+            return CallExpr(value[0], value[1])
         elif ctx.LCB():
             listLiteral = []
             for x in ctx.all_lit():
@@ -520,13 +521,14 @@ class ASTGeneration(BKITVisitor):
         return While(getExpr, getBody)
 
     def visitCallStmt(self, ctx:BKITParser.Call_stmtContext):
-        return self.visitFuncCall(ctx.func_call())
+        value = self.visitFuncCall(ctx.func_call())
+        return CallStmt(value[0], value[1])
 
     def visitFuncCall(self,ctx:BKITParser.Func_callContext):
         if ctx.func_call_cell():
-            return CallStmt(Id(ctx.ID().getText()),self.visitFuncCallCell(ctx.func_call_cell()))
+            return [Id(ctx.ID().getText()),self.visitFuncCallCell(ctx.func_call_cell())]
         else:
-            return CallStmt(Id(ctx.ID().getText()),[])
+            return [Id(ctx.ID().getText()),[]]
 
     def visitFuncCallCell(self,ctx:BKITParser.Func_call_cellContext):
         temp = []

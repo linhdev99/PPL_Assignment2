@@ -116,30 +116,120 @@ class ASTGenSuite(unittest.TestCase):
         )
         self.assertTrue(TestAST.checkASTGen(input,expect,314))
 
-    # def test_15(self):
-    #     input = """"""
-    #     expect = Program()
-    #     self.assertTrue(TestAST.checkASTGen(input,expect,315))
-    #
-    # def test_16(self):
-    #     input = """"""
-    #     expect = Program()
-    #     self.assertTrue(TestAST.checkASTGen(input,expect,316))
-    #
-    # def test_17(self):
-    #     input = """"""
-    #     expect = Program()
-    #     self.assertTrue(TestAST.checkASTGen(input,expect,317))
-    #
-    # def test_18(self):
-    #     input = """"""
-    #     expect = Program()
-    #     self.assertTrue(TestAST.checkASTGen(input,expect,318))
-    #
-    # def test_19(self):
-    #     input = """"""
-    #     expect = Program()
-    #     self.assertTrue(TestAST.checkASTGen(input,expect,319))
+    def test_15(self):
+        input = """Var: x = 1e3, y[5] = {0x2, 0o4, 1.e2, 24, 9}, z = 2.e3;"""
+        expect = Program(
+            [
+                VarDecl(
+                    Id("x"),
+                    [],
+                    FloatLiteral(1000.0)
+                ),
+                VarDecl(
+                    Id("y"),
+                    [5],
+                    ArrayLiteral(
+                        [
+                            IntLiteral(2),
+                            IntLiteral(4),
+                            FloatLiteral(100.0),
+                            IntLiteral(24),
+                            IntLiteral(9)
+                        ]
+                    )
+                ),
+                VarDecl(
+                    Id("z"),
+                    [],
+                    FloatLiteral(2000.0)
+                )
+            ]
+        )
+        self.assertTrue(TestAST.checkASTGen(input,expect,315))
+
+    def test_16(self):
+        input = """Var: a[2][3] = {{},{4,"text"},{}};"""
+        expect = Program(
+            [
+                VarDecl(
+                    Id("a"),
+                    [2,3],
+                    ArrayLiteral(
+                        [
+                            ArrayLiteral([]),
+                            ArrayLiteral(
+                                [
+                                    IntLiteral(4),
+                                    StringLiteral("text")
+                                ]
+                            ),
+                            ArrayLiteral([])
+                        ]
+                    )
+                )
+            ]
+        )
+        self.assertTrue(TestAST.checkASTGen(input,expect,316))
+
+    def test_17(self):
+        input = """Function: main 
+Body:
+    foo();
+EndBody."""
+        expect = Program(
+            [
+                FuncDecl(
+                    Id("main"),
+                    [],
+                    (
+                        [],
+                        [
+                            CallStmt(
+                                Id("foo"),
+                                []
+                            )
+                        ]
+                    )
+                )
+            ]
+        )
+        self.assertTrue(TestAST.checkASTGen(input,expect,317))
+
+    def test_18(self):
+        input = """Function: main
+Body:
+    a = foo();
+EndBody."""
+        expect = Program(
+            [
+                FuncDecl(
+                    Id("main"),
+                    [],
+                    (
+                        [],
+                        [
+                            Assign(
+                                Id("a"),
+                                CallExpr(
+                                    Id("foo"),
+                                    []
+                                )
+                            )
+                        ]
+                    )
+                )
+            ]
+        )
+        self.assertTrue(TestAST.checkASTGen(input,expect,318))
+
+#     def test_19(self):
+#         input = """Function: main
+# Body:
+#     foo();
+#     a = foo();
+# EndBody."""
+#         expect = Program()
+#         self.assertTrue(TestAST.checkASTGen(input,expect,319))
 
     def test_20(self):
         """Simple program: int main() {} """
@@ -277,7 +367,7 @@ EndBody."""
                               [
                                   Assign(
                                     Id("a"),
-                                    CallStmt(Id("foo"),[])
+                                    CallExpr(Id("foo"),[])
                                   )
                               ]
                           )
@@ -356,7 +446,7 @@ EndBody."""
                               [],
                               [
                                   Return(
-                                      CallStmt(
+                                      CallExpr(
                                           Id("foo"),
                                           [BinaryOp(
                                               "+",
@@ -465,7 +555,7 @@ EndBody."""
                                                                   BinaryOp("-",
                                                                            IntLiteral(3),
                                                                            IntLiteral(4)),
-                                                                  CallStmt(
+                                                                  CallExpr(
                                                                       Id("foo"),
                                                                       [BinaryOp("+",
                                                                                 Id("x"),
