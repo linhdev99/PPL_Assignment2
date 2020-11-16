@@ -4,5 +4,5 @@
                     While (i < 10) Do
                         Var: x = 10;
                         i = x + 1;
-                    EndWhile. 
+                    EndWhile.
                 EndBody.

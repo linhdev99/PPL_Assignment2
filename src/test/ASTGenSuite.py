@@ -80,6 +80,67 @@ class ASTGenSuite(unittest.TestCase):
         expect = Program([VarDecl(Id("m"),[],None), VarDecl(Id("n"),[20],None), VarDecl(Id("b"),[2,3,5],ArrayLiteral([IntLiteral(2), ArrayLiteral([IntLiteral(4)]), StringLiteral("d")]))])
         self.assertTrue(TestAST.checkASTGen(input,expect,312))
 
+    def test_13(self):
+        input = """Var:x = 0x3, y = 0X3;"""
+        expect = Program(
+            [
+                VarDecl(
+                    Id("x"),
+                    [],
+                    IntLiteral(3)
+                ),
+                VarDecl(
+                    Id("y"),
+                    [],
+                    IntLiteral(3)
+                )
+            ]
+        )
+        self.assertTrue(TestAST.checkASTGen(input,expect,313))
+
+    def test_14(self):
+        input = """Var: a = 0o123, b = 0O123;"""
+        expect = Program(
+            [
+                VarDecl(
+                    Id("a"),
+                    [],
+                    IntLiteral(83)
+                ),
+                VarDecl(
+                    Id("b"),
+                    [],
+                    IntLiteral(83)
+                )
+            ]
+        )
+        self.assertTrue(TestAST.checkASTGen(input,expect,314))
+
+    # def test_15(self):
+    #     input = """"""
+    #     expect = Program()
+    #     self.assertTrue(TestAST.checkASTGen(input,expect,315))
+    #
+    # def test_16(self):
+    #     input = """"""
+    #     expect = Program()
+    #     self.assertTrue(TestAST.checkASTGen(input,expect,316))
+    #
+    # def test_17(self):
+    #     input = """"""
+    #     expect = Program()
+    #     self.assertTrue(TestAST.checkASTGen(input,expect,317))
+    #
+    # def test_18(self):
+    #     input = """"""
+    #     expect = Program()
+    #     self.assertTrue(TestAST.checkASTGen(input,expect,318))
+    #
+    # def test_19(self):
+    #     input = """"""
+    #     expect = Program()
+    #     self.assertTrue(TestAST.checkASTGen(input,expect,319))
+
     def test_20(self):
         """Simple program: int main() {} """
         input = """Function: foo
@@ -433,8 +494,8 @@ EndBody."""
         input = r"""
             Function: foo
                 Body:
-                    For (i = 0, i < 5, 1) Do 
-                        print(i); 
+                    For (i = 0, i < 5, 1) Do
+                        print(i);
                     EndFor.
                 EndBody."""
         expect = Program(
@@ -472,7 +533,7 @@ EndBody."""
                 Body:
                     While (i > 10) Do
                         i = i - 1;
-                    EndWhile. 
+                    EndWhile.
                 EndBody."""
         expect = Program(
             [
@@ -515,7 +576,7 @@ EndBody."""
             Function: testWhile
                 Body:
                     While (i > 10) Do
-                    EndWhile. 
+                    EndWhile.
                 EndBody."""
         expect = Program(
             [
@@ -551,7 +612,7 @@ EndBody."""
                     While (i < 10) Do
                         Var: x = 10;
                         i = x + 1;
-                    EndWhile. 
+                    EndWhile.
                 EndBody."""
         expect = Program(
             [
@@ -598,8 +659,8 @@ EndBody."""
                 Do
                     i = i * 2;
                     Break;
-                While (i < 10) 
-                EndDo. 
+                While (i < 10)
+                EndDo.
             EndBody."""
         expect = Program(
             [

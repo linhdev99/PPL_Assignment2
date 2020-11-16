@@ -3,5 +3,5 @@
                 Body:
                     While (i > 10) Do
                         i = i - 1;
-                    EndWhile. 
+                    EndWhile.
                 EndBody.

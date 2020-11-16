@@ -2,5 +2,5 @@
             Function: testWhile
                 Body:
                     While (i > 10) Do
-                    EndWhile. 
+                    EndWhile.
                 EndBody.

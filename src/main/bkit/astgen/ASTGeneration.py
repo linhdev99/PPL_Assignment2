@@ -547,7 +547,21 @@ class ASTGeneration(BKITVisitor):
             return self.visitScalarVar(ctx.scalar_var())
 
     def visitIntLiteral(self, ctx:BKITParser.Int_litContext):
-        return IntLiteral(int(ctx.INTLIT().getText()))
+        valueBase = ctx.INTLIT().getText()
+        flag = 0
+        for x in valueBase:
+            if (x == "x") or (x == "X"):
+                flag = 1
+                break
+            if (x == "o") or (x == "O"):
+                flag = 2
+                break
+        if flag == 0:
+            return IntLiteral(int(valueBase))
+        if flag == 1:
+            return IntLiteral(int(valueBase, 16))
+        if flag == 2:
+            return IntLiteral(int(valueBase, 8))
 
     def visitFloatLiteral(self, ctx:BKITParser.Float_litContext):
         return FloatLiteral(float(ctx.FLOATLIT().getText()))

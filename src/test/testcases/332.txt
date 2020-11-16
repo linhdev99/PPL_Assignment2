@@ -1,7 +1,7 @@
 
             Function: foo
                 Body:
-                    For (i = 0, i < 5, 1) Do 
-                        print(i); 
+                    For (i = 0, i < 5, 1) Do
+                        print(i);
                     EndFor.
                 EndBody.
