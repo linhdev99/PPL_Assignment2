@@ -1174,7 +1174,7 @@ Function: main
             Continue;
         EndIf.
     EndBody."""
-        expect = "Error on line 12 col 19: =="
+        expect = "Error on line 12 col 31: ;"
         self.assertTrue(TestParser.checkParser(input, expect, 259))
 
     def test_60_err(self):

@@ -67,8 +67,9 @@ stmt_spe: assign_stmt SEMI
 body_declare: BODY COLON body* ENDBODY DOT;
 
 //assign statement
-assign_stmt: assign_part EQ exp;
-assign_part: (scalar_var | ((func_call | STRINGLIT | array_cell)) index_var*);
+assign_stmt: exp EQ exp;
+//assign_part: exp;
+//assign_part: (scalar_var | ((func_call | STRINGLIT | array_cell)) index_var*);
 // function declare
 func_declare: FUNCTION COLON ID parameter_func? body_declare;
 
@@ -110,10 +111,12 @@ break_stmt: BREAK SEMI;
 continue_stmt: CONTINUE SEMI;
 
 //Return statement
-return_stmt: RETURN (scalar_var | all_lit | exp)? SEMI;
+return_stmt: RETURN exp? SEMI;
 
 //Call statment
-func_call: ID LP ((exp | var_vp) (COMMA (exp | var_vp))*)? RP;
+//func_call: ID LP ((exp | var_vp) (COMMA (exp | var_vp))*)? RP;
+func_call: ID LP func_call_cell? RP;
+func_call_cell: var_vp (COMMA var_vp)*;
 call_stmt: func_call SEMI;
 
 //expression
@@ -128,7 +131,7 @@ op_index: LSB exp RSB;
 operands: LP exp RP
         | func_call
         | all_lit
-        | LCB exp (COMMA exp)* RCB
+        | LCB all_lit (COMMA all_lit)* RCB
         | ID
         ;
 

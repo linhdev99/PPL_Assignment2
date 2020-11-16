@@ -155,7 +155,7 @@ Function: foo
 Parameter: x, y[5][2]
 Body:
     Var: r = 3.14, e = 2.7e1;
-    a = 1 + (3-4) \ (4 + 3) * 4;
+    a = x;
 EndBody."""
         expect = Program(
                     [
@@ -181,3 +181,191 @@ EndBody."""
                                  )
                     ])
         self.assertTrue(TestAST.checkASTGen(input,expect,324))
+
+    def test_25(self):
+        """Simple program: int main() {} """
+        input = r"""
+        Function: foo
+            Body:
+                Break;
+                Continue;
+            EndBody."""
+        expect = Program(
+                [FuncDecl(Id("foo"),[],(
+                              [],
+                              [
+                                  Break(),
+                                  Continue()
+                              ]
+                            )
+                          )
+                ]
+                )
+        self.assertTrue(TestAST.checkASTGen(input, expect, 325))
+
+    def test_26(self):
+        input = r"""
+        Function: foo
+            Body:
+                a = foo();
+            EndBody."""
+        expect = Program(
+                [FuncDecl(Id("foo"),[],
+                          (
+                              [],
+                              [
+                                  Assign(
+                                    Id("a"),
+                                    CallStmt(Id("foo"),[])
+                                  )
+                              ]
+                          )
+                          )
+                ])
+        self.assertTrue(TestAST.checkASTGen(input, expect, 326))
+
+    def test_27(self):
+        input = r"""
+        Function: foo
+            Body:
+                a = {1,3,5,7};
+            EndBody."""
+        expect = Program\
+                (
+                [FuncDecl(Id("foo"),[],
+                          (
+                              [],
+                              [
+                                  Assign(
+                                    Id("a"),
+                                    ArrayLiteral(
+                                        [
+                                        IntLiteral(1),
+                                        IntLiteral(3),
+                                        IntLiteral(5),
+                                        IntLiteral(7)
+                                        ]
+                                    )
+                                  )
+                              ]
+                          ))
+                ]
+                )
+        self.assertTrue(TestAST.checkASTGen(input, expect, 327))
+
+    def test_28(self):
+        input = r"""
+        Function: foo
+            Body:
+                {1,2,3}[2] = 5;
+            EndBody."""
+        expect = Program(
+                [FuncDecl(Id("foo"),[],
+                          (
+                              [],
+                              [
+                                  Assign(
+                                    ArrayCell(
+                                    ArrayLiteral(
+                                        [
+                                        IntLiteral(1),
+                                        IntLiteral(2),
+                                        IntLiteral(3),
+                                        ]
+                                    ),
+                                    [IntLiteral(2)]
+                                    ),
+                                    IntLiteral(5)
+                                  )
+                              ]
+                          ))
+                ]
+                )
+        self.assertTrue(TestAST.checkASTGen(input, expect, 328))
+
+    def test_29(self):
+        input = r"""
+        Function: foo
+            Body:
+                Return foo(x+2);
+            EndBody."""
+        expect = Program(
+                [FuncDecl(Id("foo"),[],
+                          (
+                              [],
+                              [
+                                  Return(
+                                      CallStmt(
+                                          Id("foo"),
+                                          [BinaryOp(
+                                              "+",
+                                              Id("x"),
+                                              IntLiteral(2)
+                                          )]
+                                      )
+                                  )
+                              ]
+                          ))
+                ]
+                )
+        self.assertTrue(TestAST.checkASTGen(input, expect, 329))
+
+    def test_30(self):
+        input = r"""
+        Function: foo
+            Body:
+                If True Then
+                    foo();
+                ElseIf False Then
+                    asd();
+                ElseIf a < 2 Then
+                    Var: x;
+                Else
+                    Var: x = 3;
+                    x = x + 1;
+                EndIf.
+            EndBody."""
+        expect = Program(
+                [FuncDecl(Id("foo"),
+                          [],
+                          (
+                              [],
+                              [
+                                  If(
+                                      [
+                                       (
+                                        BooleanLiteral(True),
+                                        [],
+                                        [
+                                            CallStmt(Id("foo"),[])
+                                        ]
+                                        ),
+                                        (
+                                        BooleanLiteral(False),
+                                        [],
+                                        [
+                                            CallStmt(Id("asd"),[])
+                                        ]
+                                        ),
+                                        (
+                                        BinaryOp("<",Id("a"),IntLiteral(2)),
+                                        [
+                                            VarDecl(Id("x"),[],None)
+                                        ],
+                                        []
+                                        )
+                                      ],
+                                      (
+                                          [
+                                              VarDecl(Id("x"),[],IntLiteral(3))
+                                          ],
+                                          [
+                                              Assign(Id("x"),BinaryOp("+",Id("x"),IntLiteral(1)))
+                                          ]
+                                      )
+                                  )
+                              ]
+                          ))
+                ]
+                )
+        self.assertTrue(TestAST.checkASTGen(input, expect, 330))
