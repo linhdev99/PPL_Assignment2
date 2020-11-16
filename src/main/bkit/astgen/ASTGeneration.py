@@ -374,7 +374,6 @@ class ASTGeneration(BKITVisitor):
             tempElse = self.visitElse(ctx.else_stmt())
         tupleElseStmt = tempElse
 
-        print(If(listIfThenStmt,tupleElseStmt))
         return If(listIfThenStmt,tupleElseStmt)
 
     def visitElseIf(self,ctx:BKITParser.Elseif_stmtContext):

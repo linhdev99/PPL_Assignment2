@@ -369,3 +369,62 @@ EndBody."""
                 ]
                 )
         self.assertTrue(TestAST.checkASTGen(input, expect, 330))
+
+    def test_31(self):
+        input = r"""
+        Function: foo
+            Body:
+                If x != y Then
+                    x = x+2*y-(3-4)\foo(x+1);
+                EndIf.
+            EndBody."""
+        expect = Program(
+                [FuncDecl(Id("foo"),
+                          [],
+                          (
+                              [],
+                              [
+                                  If(
+                                      [
+                                       (
+                                        BinaryOp("!=",Id("x"),Id("y")),
+                                        [],
+                                        [
+                                            Assign(
+                                                Id("x"),
+                                                BinaryOp("-",
+                                                         BinaryOp("+",
+                                                                  Id("x"),
+                                                                  BinaryOp("*",
+                                                                           IntLiteral(2),
+                                                                           Id("y")
+                                                                           )
+                                                                  ),
+                                                         BinaryOp("\\",
+                                                                  BinaryOp("-",
+                                                                           IntLiteral(3),
+                                                                           IntLiteral(4)),
+                                                                  CallStmt(
+                                                                      Id("foo"),
+                                                                      [BinaryOp("+",
+                                                                                Id("x"),
+                                                                                IntLiteral(1)
+                                                                                )
+                                                                       ]
+                                                                  )
+                                                                  )
+                                                         )
+                                            )
+                                        ]
+                                        )
+                                      ],
+                                      (
+                                          [],
+                                          []
+                                      )
+                                  )
+                              ]
+                          ))
+                ]
+                )
+        self.assertTrue(TestAST.checkASTGen(input, expect, 331))
