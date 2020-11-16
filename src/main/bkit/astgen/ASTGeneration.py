@@ -468,10 +468,56 @@ class ASTGeneration(BKITVisitor):
         return Return(temp)
 
     def visitDowhile(self, ctx:BKITParser.DoWhile_stmtContext):
-        return None
+        """
+        sl:Tuple[List[VarDecl],List[Stmt]]
+        exp: Expr
+        """
+        getExpr = self.visitCallExpr(ctx.exp())
+        tempBody = []
+        temp_var = []
+        temp_stmt = []
+        for x in ctx.body():
+            temp = self.visitBody(x)
+            if temp[0] == 0:
+                if isinstance(temp[1], list):
+                    temp_var.extend(temp[1])
+                else:
+                    temp_var.append(temp[1])
+            else:
+                if isinstance(temp[1], list):
+                    temp_stmt.extend(temp[1])
+                else:
+                    temp_stmt.append(temp[1])
+        tempBody.append(temp_var)
+        tempBody.append(temp_stmt)
+        getBody = (tempBody[0], tempBody[1])
+        return Dowhile(getBody, getExpr)
 
     def visitWhile(self, ctx:BKITParser.While_stmtContext):
-        return None
+        """
+        exp: Expr
+        sl:Tuple[List[VarDecl],List[Stmt]]
+        """
+        getExpr = self.visitCallExpr(ctx.exp())
+        tempBody = []
+        temp_var = []
+        temp_stmt = []
+        for x in ctx.body():
+            temp = self.visitBody(x)
+            if temp[0] == 0:
+                if isinstance(temp[1], list):
+                    temp_var.extend(temp[1])
+                else:
+                    temp_var.append(temp[1])
+            else:
+                if isinstance(temp[1], list):
+                    temp_stmt.extend(temp[1])
+                else:
+                    temp_stmt.append(temp[1])
+        tempBody.append(temp_var)
+        tempBody.append(temp_stmt)
+        getBody = (tempBody[0], tempBody[1])
+        return While(getExpr, getBody)
 
     def visitCallStmt(self, ctx:BKITParser.Call_stmtContext):
         return self.visitFuncCall(ctx.func_call())

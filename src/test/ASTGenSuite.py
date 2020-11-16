@@ -464,3 +464,167 @@ EndBody."""
             ]
         )
         self.assertTrue(TestAST.checkASTGen(input, expect, 332))
+
+    def test_333(self):
+        """Simple program: int main() {} """
+        input = r"""
+            Function: testWhile
+                Body:
+                    While (i > 10) Do
+                        i = i - 1;
+                    EndWhile. 
+                EndBody."""
+        expect = Program(
+            [
+                FuncDecl(
+                    Id("testWhile"),
+                    [],
+                    (
+                        [],
+                        [
+                            While(
+                                BinaryOp(
+                                    ">",
+                                    Id("i"),
+                                    IntLiteral(10)
+                                ),
+                                (
+                                    [],
+                                    [
+                                        Assign(
+                                            Id("i"),
+                                            BinaryOp(
+                                                "-",
+                                                Id("i"),
+                                                IntLiteral(1)
+                                            )
+                                        )
+                                    ]
+                                )
+                            )
+                        ]
+                    )
+                )
+            ]
+        )
+        self.assertTrue(TestAST.checkASTGen(input, expect, 333))
+
+    def test_334(self):
+        """Simple program: int main() {} """
+        input = r"""
+            Function: testWhile
+                Body:
+                    While (i > 10) Do
+                    EndWhile. 
+                EndBody."""
+        expect = Program(
+            [
+                FuncDecl(
+                    Id("testWhile"),
+                    [],
+                    (
+                        [],
+                        [
+                            While(
+                                BinaryOp(
+                                    ">",
+                                    Id("i"),
+                                    IntLiteral(10)
+                                ),
+                                (
+                                    [],
+                                    []
+                                )
+                            )
+                        ]
+                    )
+                )
+            ]
+        )
+        self.assertTrue(TestAST.checkASTGen(input, expect, 334))
+
+    def test_335(self):
+        """Simple program: int main() {} """
+        input = r"""
+            Function: testWhile
+                Body:
+                    While (i < 10) Do
+                        Var: x = 10;
+                        i = x + 1;
+                    EndWhile. 
+                EndBody."""
+        expect = Program(
+            [
+                FuncDecl(
+                    Id("testWhile"),
+                    [],
+                    (
+                        [],
+                        [
+                            While(
+                                BinaryOp(
+                                    "<",
+                                    Id("i"),
+                                    IntLiteral(10)
+                                ),
+                                (
+                                    [
+                                        VarDecl(Id("x"),[],IntLiteral(10))
+                                    ],
+                                    [
+                                        Assign(
+                                            Id("i"),
+                                            BinaryOp(
+                                                "+",
+                                                Id("x"),
+                                                IntLiteral(1)
+                                            )
+                                        )
+                                    ]
+                                )
+                            )
+                        ]
+                    )
+                )
+            ]
+        )
+        self.assertTrue(TestAST.checkASTGen(input, expect, 335))
+
+    def test_36(self):
+        """Simple program: int main() {} """
+        input = r"""
+        Function: testDowhile
+            Body:
+                Do
+                    i = i * 2;
+                    Break;
+                While (i < 10) 
+                EndDo. 
+            EndBody."""
+        expect = Program(
+            [
+                FuncDecl(
+                    Id("testDowhile"),
+                    [],
+                    (
+                        [],
+                        [
+                            Dowhile(
+                                (
+                                    [],
+                                    [
+                                        Assign(
+                                            Id("i"),
+                                            BinaryOp("*",Id("i"),IntLiteral(2))
+                                        ),
+                                        Break()
+                                    ]
+                                ),
+                                BinaryOp("<",Id("i"),IntLiteral(10))
+                            )
+                        ]
+                    )
+                )
+            ]
+        )
+        self.assertTrue(TestAST.checkASTGen(input, expect, 336))
