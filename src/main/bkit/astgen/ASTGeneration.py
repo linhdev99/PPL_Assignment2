@@ -418,7 +418,42 @@ class ASTGeneration(BKITVisitor):
         return (tempBody[0], tempBody[1])
 
     def visitFor(self, ctx:BKITParser.For_stmtContext):
-        return None
+        """
+        idx1: Id
+        expr1:Expr
+        expr2:Expr
+        expr3:Expr
+        loop: Tuple[List[VarDecl],List[Stmt]]
+        """
+        getID = Id(ctx.ID().getText())
+        getExpr1 = self.visitCallExpr(ctx.exp())
+        getExpr2 = self.visitConditionExpr(ctx.conditionExpr())
+        getExpr3 = self.visitUpdateExpr(ctx.updateExpr())
+        tempBody = []
+        temp_var = []
+        temp_stmt = []
+        for x in ctx.body():
+            temp = self.visitBody(x)
+            if temp[0] == 0:
+                if isinstance(temp[1], list):
+                    temp_var.extend(temp[1])
+                else:
+                    temp_var.append(temp[1])
+            else:
+                if isinstance(temp[1], list):
+                    temp_stmt.extend(temp[1])
+                else:
+                    temp_stmt.append(temp[1])
+        tempBody.append(temp_var)
+        tempBody.append(temp_stmt)
+        getLoop = (tempBody[0], tempBody[1])
+        return For(getID, getExpr1, getExpr2, getExpr3, getLoop)
+
+    def visitConditionExpr(self,ctx:BKITParser.ConditionExprContext):
+        return self.visitCallExpr(ctx.exp())
+
+    def visitUpdateExpr(self,ctx:BKITParser.UpdateExprContext):
+        return self.visitCallExpr(ctx.exp())
 
     def visitContinue(self, ctx:BKITParser.Continue_stmtContext):
         return Continue()

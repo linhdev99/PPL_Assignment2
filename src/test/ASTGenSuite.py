@@ -428,3 +428,39 @@ EndBody."""
                 ]
                 )
         self.assertTrue(TestAST.checkASTGen(input, expect, 331))
+
+    def test_32(self):
+        input = r"""
+            Function: foo
+                Body:
+                    For (i = 0, i < 5, 1) Do 
+                        print(i); 
+                    EndFor.
+                EndBody."""
+        expect = Program(
+            [FuncDecl(
+                Id("foo"),
+                [],
+                (
+                    [],
+                    [
+                        For(
+                            Id("i"),
+                            IntLiteral(0),
+                            BinaryOp("<",
+                                     Id("i"),
+                                     IntLiteral(5)),
+                            IntLiteral(1),
+                            (
+                                [],
+                                [
+                                    CallStmt(Id("print"),[Id("i")])
+                                ]
+                            )
+                        )
+                    ]
+                )
+            )
+            ]
+        )
+        self.assertTrue(TestAST.checkASTGen(input, expect, 332))
