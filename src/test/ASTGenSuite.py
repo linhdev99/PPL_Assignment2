@@ -222,14 +222,42 @@ EndBody."""
         )
         self.assertTrue(TestAST.checkASTGen(input,expect,318))
 
-#     def test_19(self):
-#         input = """Function: main
-# Body:
-#     foo();
-#     a = foo();
-# EndBody."""
-#         expect = Program()
-#         self.assertTrue(TestAST.checkASTGen(input,expect,319))
+    def test_19(self):
+        input = """Function: main
+Body:
+    Var: id[0x2][0X3];
+    Var: id[0o2][0O10];
+    foo();
+    a = foo();
+EndBody."""
+        expect = Program(
+            [
+                FuncDecl(
+                    Id("main"),
+                    [],
+                    (
+                        [
+                            VarDecl(Id("id"),[2,3],None),
+                            VarDecl(Id("id"),[2,8],None)
+                        ],
+                        [
+                            CallStmt(
+                                Id("foo"),
+                                []
+                            ),
+                            Assign(
+                                Id("a"),
+                                CallExpr(
+                                    Id("foo"),
+                                    []
+                                )
+                            )
+                        ]
+                    )
+                )
+            ]
+        )
+        self.assertTrue(TestAST.checkASTGen(input,expect,319))
 
     def test_20(self):
         """Simple program: int main() {} """

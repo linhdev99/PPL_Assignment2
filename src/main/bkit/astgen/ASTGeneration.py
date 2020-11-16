@@ -55,13 +55,27 @@ class ASTGeneration(BKITVisitor):
             listIndex = []
             for x in ctx.index_var_int():
                 valueIndex = self.visitIndexVarInt(x)
-                listIndex.append(int(valueIndex))
+                listIndex.append(valueIndex)
             return [Id(ctx.ID().getText()),listIndex]
         else:
             return [Id(ctx.ID().getText()),[]]
 
     def visitIndexVarInt(self,ctx:BKITParser.Index_var_intContext):
-        return ctx.INTLIT().getText()
+        valueBase = ctx.INTLIT().getText()
+        flag = 0
+        for x in valueBase:
+            if (x == "x") or (x == "X"):
+                flag = 1
+                break
+            if (x == "o") or (x == "O"):
+                flag = 2
+                break
+        if flag == 0:
+            return int(valueBase)
+        if flag == 1:
+            return int(valueBase, 16)
+        if flag == 2:
+            return int(valueBase, 8)
 
     def visitAllLiteral(self,ctx:BKITParser.All_litContext):
         if ctx.int_lit():

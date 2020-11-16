@@ -1,6 +1,7 @@
-
-            Function: foo
-                Body:
-                    Var: x;
-                    foo ();
-                EndBody.
+Function: main
+Body:
+    Var: id[0x2][0X3];
+    Var: id[0o2][0O10];
+    foo();
+    a = foo();
+EndBody.
