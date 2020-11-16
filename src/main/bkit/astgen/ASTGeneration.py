@@ -281,20 +281,30 @@ class ASTGeneration(BKITVisitor):
                 self.visitExp5(ctx.exp5())
             )
         else:
-            return self.visitExp6(ctx.exp6())
+            temp = self.visitExp6(ctx.exp6())
+            if isinstance(temp, list):
+                return ArrayCell(temp[0], temp[1])
+            else:
+                return temp
 
     def visitExp6(self,ctx:BKITParser.Exp6Context):
         if ctx.op_index():
-            valueArrCell = ArrayCell(
-                self.visitExp6(ctx.exp6()),
-                [self.visitOpIndex(ctx.op_index())]
-            )
-            return valueArrCell
+            getID = self.visitExp6(ctx.exp6())
+            getOpIdx = self.visitOpIndex(ctx.op_index())
+            if isinstance(getID, list):
+                value = []
+                value.extend(getID[1])
+                value.append(getOpIdx)
+                return [getID[0], value]
+            else:
+                return [getID, [getOpIdx]]
         else:
-            return self.visitOperands(ctx.operands())
+            temp = self.visitOperands(ctx.operands())
+            return temp
 
     def visitOpIndex(self,ctx:BKITParser.Op_indexContext):
-        return self.visitCallExpr(ctx.exp())
+        temp = self.visitCallExpr(ctx.exp())
+        return temp
 
     def visitOperands(self,ctx:BKITParser.OperandsContext):
         if ctx.LP():

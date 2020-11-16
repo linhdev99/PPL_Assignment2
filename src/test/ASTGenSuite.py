@@ -807,3 +807,150 @@ EndBody."""
             ]
         )
         self.assertTrue(TestAST.checkASTGen(input, expect, 336))
+
+    def test_37(self):
+        input = r"""Function: main 
+Body:
+    a[1][2][3] = x[1][a][foo()];
+EndBody."""
+        expect = Program(
+            [
+                FuncDecl(
+                    Id("main"),
+                    [],
+                    (
+                        [],
+                        [
+                            Assign(
+                                ArrayCell(
+                                    Id("a"),
+                                    [
+                                        IntLiteral("1"),
+                                        IntLiteral("2"),
+                                        IntLiteral("3")
+                                    ]
+                                ),
+                                ArrayCell(
+                                    Id("x"),
+                                    [
+                                        IntLiteral("1"),
+                                        Id("a"),
+                                        CallExpr(
+                                            Id("foo"),
+                                            []
+                                        )
+                                    ]
+                                )
+                            )
+                        ]
+                    )
+                )
+            ]
+        )
+        self.assertTrue(TestAST.checkASTGen(input, expect, 337))
+
+    def test_38(self):
+        """Simple program: int main() {} """
+        input = r"""
+        Function: foo
+            Body:
+                a[i][1] = a[3][4] + 5 \ (2 * 3) -  a[6][b[1]];
+                Return a[4][2];
+            EndBody."""
+        expect = Program(
+            [
+                FuncDecl(
+                    Id("foo"),
+                    [],
+                    (
+                        [],
+                        [
+                            Assign(
+                                ArrayCell(
+                                    Id("a"),
+                                    [
+                                        Id("i"),
+                                        IntLiteral("1")
+                                    ]
+                                ),
+                                BinaryOp(
+                                    "-",
+                                    BinaryOp(
+                                        "+",
+                                        ArrayCell(
+                                            Id("a"),
+                                            [
+                                                IntLiteral(3),
+                                                IntLiteral(4)
+                                            ]
+                                        ),
+                                        BinaryOp(
+                                            "\\",
+                                            IntLiteral(5),
+                                            BinaryOp(
+                                                "*",
+                                                IntLiteral(2),
+                                                IntLiteral(3)
+                                            )
+                                        )
+                                    ),
+                                    ArrayCell(
+                                        Id("a"),
+                                        [
+                                            IntLiteral(6),
+                                            ArrayCell(
+                                                Id("b"),
+                                                [
+                                                    IntLiteral(1)
+                                                ]
+                                            )
+                                        ]
+                                    )
+                                )
+                            ),
+                            Return(
+                                ArrayCell(
+                                    Id("a"),
+                                    [
+                                        IntLiteral(4),
+                                        IntLiteral(2)
+                                    ]
+                                )
+                            )
+                        ]
+                    )
+                )
+            ]
+        )
+        self.assertTrue(TestAST.checkASTGen(input, expect, 338))
+
+    def test_39(self):
+        """Simple program: int main() {} """
+        input = r"""
+        Function: foo
+            Body:
+                Return a[10][10];
+            EndBody."""
+        expect = Program(
+            [
+                FuncDecl(
+                    Id("foo"),
+                    [],
+                    (
+                        [],
+                        [
+                            Return(
+                                ArrayCell(
+                                    Id("a"),
+                                    [
+                                        IntLiteral(10),
+                                        IntLiteral(10)
+                                    ]
+                                )
+                            )
+                        ]
+                    )
+                )
+            ]
+        )
+        self.assertTrue(TestAST.checkASTGen(input, expect, 339))
