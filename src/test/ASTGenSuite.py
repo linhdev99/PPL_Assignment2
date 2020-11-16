@@ -4,12 +4,20 @@ from AST import *
 
 class ASTGenSuite(unittest.TestCase):
     def test_0(self):
-        input = """Var:x;"""
-        expect = Program([VarDecl(Id("x"),[],None)])
+        input = r"""Var:x;"""
+        expect = Program(
+            [
+                VarDecl(
+                    Id("x"),
+                    [],
+                    None
+                )
+            ]
+        )
         self.assertTrue(TestAST.checkASTGen(input,expect,300))
 
     def test_1(self):
-        input = """Var:x,y;"""
+        input = r"""Var:x,y;"""
         expect = Program([VarDecl(Id("x"),[],None),VarDecl(Id("y"),[],None)])
         self.assertTrue(TestAST.checkASTGen(input,expect,301))
 
@@ -106,7 +114,7 @@ class ASTGenSuite(unittest.TestCase):
         self.assertTrue(TestAST.checkASTGen(input,expect,314))
 
     def test_15(self):
-        input = """Var: x = 1e3, y[5] = {0x2, 0o4, 1.e2, 24, 9}, z = 2.e3;"""
+        input = r"""Var: x = 1e3, y[5] = {0x2, 0o4, 1.e2, 24, 9}, z = 2.e3;"""
         expect = Program(
             [
                 VarDecl(
@@ -989,3 +997,271 @@ EndBody."""
         )
         self.assertTrue(TestAST.checkASTGen(input, expect, 340))
 
+    def test_41(self):  
+        input = r"""
+        Function: foo
+            Body:
+                Var: x = "1710165";
+                If x == "1710165" Then
+                    Return id(x);
+                ElseIf x == "1710166" Then
+                    x = "1710165";
+                Else
+                    Continue;
+                EndIf.
+            EndBody."""
+        expect = Program(
+            [
+                FuncDecl(
+                    Id("foo"),
+                    [],
+                    (
+                        [
+                            VarDecl(
+                                Id("x"),
+                                [],
+                                StringLiteral("1710165")
+                            )
+                        ],
+                        [
+                            If(
+                                [
+                                    (
+                                        BinaryOp("==",Id("x"),StringLiteral("1710165")),
+                                        [],
+                                        [
+                                            Return(
+                                                CallExpr(
+                                                    Id("id"),
+                                                    [
+                                                        Id("x")
+                                                    ]
+                                                )
+                                            )
+                                        ]
+                                    ),
+                                    (
+                                        BinaryOp("==",Id("x"),StringLiteral("1710166")),
+                                        [],
+                                        [
+                                            Assign(
+                                                Id("x"),
+                                                StringLiteral("1710165")
+                                            )
+                                        ]
+                                    )
+                                ],
+                                (
+                                    [],
+                                    [
+                                        Continue()
+                                    ]
+                                )
+                            )
+                        ]
+                    )
+                )
+            ]
+        )
+        self.assertTrue(TestAST.checkASTGen(input, expect, 341))
+
+    def test_42(self):  
+        input = r"""
+        Function: foo
+            Body:
+                Var: x = "1710165";
+                If x == "1710165" Then
+                    Return id(x);
+                ElseIf x == "1710166" Then
+                    x = "1710165";
+                Else
+                    For (x = 0, x < 5, 2) Do
+                        Break;
+                    EndFor.
+                EndIf.
+            EndBody."""
+        expect = Program(
+            [
+                FuncDecl(
+                    Id("foo"),
+                    [],
+                    (
+                        [
+                            VarDecl(
+                                Id("x"),
+                                [],
+                                StringLiteral("1710165")
+                            )
+                        ],
+                        [
+                            If(
+                                [
+                                    (
+                                        BinaryOp("==",Id("x"),StringLiteral("1710165")),
+                                        [],
+                                        [
+                                            Return(
+                                                CallExpr(
+                                                    Id("id"),
+                                                    [
+                                                        Id("x")
+                                                    ]
+                                                )
+                                            )
+                                        ]
+                                    ),
+                                    (
+                                        BinaryOp("==",Id("x"),StringLiteral("1710166")),
+                                        [],
+                                        [
+                                            Assign(
+                                                Id("x"),
+                                                StringLiteral("1710165")
+                                            )
+                                        ]
+                                    )
+                                ],
+                                (
+                                    [],
+                                    [
+                                        For(
+                                            Id("x"),
+                                            IntLiteral(0),
+                                            BinaryOp(
+                                                "<",
+                                                Id("x"),
+                                                IntLiteral(5)
+                                            ),
+                                            IntLiteral(2),
+                                            (
+                                                [],
+                                                [
+                                                    Break()
+                                                ]
+                                            )
+                                        )
+                                    ]
+                                )
+                            )
+                        ]
+                    )
+                )
+            ]
+        )
+        self.assertTrue(TestAST.checkASTGen(input, expect, 342))
+
+    def test_43(self):  
+        input = r"""
+        Function: foo
+            Body:
+                Var: x = "1710165";
+                If x == "1710165" Then
+                    Return id(x);
+                ElseIf x == "1710166" Then
+                    x = "1710165";
+                Else
+                    For (x = 0, x < 5, 2) Do
+                        While (x != 1) Do
+                            Return a[1][x+1][foo(x)];
+                        EndWhile.
+                    EndFor.
+                EndIf.
+            EndBody."""
+        expect = Program(
+            [
+                FuncDecl(
+                    Id("foo"),
+                    [],
+                    (
+                        [
+                            VarDecl(
+                                Id("x"),
+                                [],
+                                StringLiteral("1710165")
+                            )
+                        ],
+                        [
+                            If(
+                                [
+                                    (
+                                        BinaryOp("==",Id("x"),StringLiteral("1710165")),
+                                        [],
+                                        [
+                                            Return(
+                                                CallExpr(
+                                                    Id("id"),
+                                                    [
+                                                        Id("x")
+                                                    ]
+                                                )
+                                            )
+                                        ]
+                                    ),
+                                    (
+                                        BinaryOp("==",Id("x"),StringLiteral("1710166")),
+                                        [],
+                                        [
+                                            Assign(
+                                                Id("x"),
+                                                StringLiteral("1710165")
+                                            )
+                                        ]
+                                    )
+                                ],
+                                (
+                                    [],
+                                    [
+                                        For(
+                                            Id("x"),
+                                            IntLiteral(0),
+                                            BinaryOp(
+                                                "<",
+                                                Id("x"),
+                                                IntLiteral(5)
+                                            ),
+                                            IntLiteral(2),
+                                            (
+                                                [],
+                                                [
+                                                    While(
+                                                        BinaryOp(
+                                                            "!=",
+                                                            Id("x"),
+                                                            IntLiteral(1)),
+                                                            (
+                                                                [],
+                                                                [
+                                                                    Return(
+                                                                        ArrayCell(
+                                                                            Id("a"),
+                                                                            [
+                                                                                IntLiteral(1),
+                                                                                BinaryOp(
+                                                                                    "+",
+                                                                                    Id("x"),
+                                                                                    IntLiteral(1)
+                                                                                ),
+                                                                            CallExpr(
+                                                                                Id("foo"),
+                                                                                [
+                                                                                    Id("x")
+                                                                                ]
+                                                                            )
+                                                                        ]
+                                                                    )
+                                                                )
+                                                            ]
+                                                        )
+                                                    )
+                                                ]
+                                            )
+                                        )
+                                    ]
+                                )
+                            )
+                        ]
+                    )
+                )
+            ]
+        )
+        self.assertTrue(TestAST.checkASTGen(input, expect, 343))

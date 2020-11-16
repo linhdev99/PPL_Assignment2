@@ -7,6 +7,10 @@
                 ElseIf x == "1710166" Then
                     x = "1710165";
                 Else
-                    Continue;
+                    For (x = 0, x < 5, 2) Do
+                        While (x != 1) Do
+                            Return a[1][x+1][foo(x)];
+                        EndWhile.
+                    EndFor.
                 EndIf.
             EndBody.
