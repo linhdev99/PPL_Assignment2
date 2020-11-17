@@ -2,7 +2,7 @@ import unittest
 from TestUtils import TestAST
 from AST import *
 
-from main.bkit.utils.AST import ArrayCell, ArrayLiteral, CallExpr, CallStmt, IntLiteral, StringLiteral, VarDecl
+from main.bkit.utils.AST import ArrayCell, ArrayLiteral, BinaryOp, IntLiteral, VarDecl
 
 class ASTGenSuite(unittest.TestCase):
     def test_0(self):
@@ -3390,3 +3390,377 @@ Var: x = 1;"""
             input, 
             expect, 
             363))
+
+    def test_64(self):
+        input = r"""
+        Function: foo
+            Body:
+                foo1();
+                Return foo(fooo());
+                ** Test comment **
+            EndBody."""
+        expect = Program(
+                [
+                    FuncDecl(
+                        Id("foo"),
+                        [],
+                        (
+                            [],
+                            [
+                                CallStmt(
+                                    Id("foo1"),
+                                    []
+                                ),
+                                Return(
+                                    CallExpr(
+                                        Id("foo"),
+                                        [
+                                            CallExpr(
+                                                Id("fooo"),
+                                                []
+                                            )
+                                        ]
+                                    )
+                                )
+                            ]
+                        )
+                    )
+                ]
+            )
+        self.assertTrue(TestAST.checkASTGen(
+            input, 
+            expect, 
+            364))
+
+    def test_65(self):
+        input = r"""
+        Function: foo
+            Body:
+                foo1();
+                Return foo(fooo({1,2,3}));
+                ** Test comment **
+            EndBody."""
+        expect = Program(
+                [
+                    FuncDecl(
+                        Id("foo"),
+                        [],
+                        (
+                            [],
+                            [
+                                CallStmt(
+                                    Id("foo1"),
+                                    []
+                                ),
+                                Return(
+                                    CallExpr(
+                                        Id("foo"),
+                                        [
+                                            CallExpr(
+                                                Id("fooo"),
+                                                [
+                                                    ArrayLiteral(
+                                                        [
+                                                            IntLiteral(1),
+                                                            IntLiteral(2),
+                                                            IntLiteral(3)
+                                                        ]
+                                                    )
+                                                ]
+                                            )
+                                        ]
+                                    )
+                                )
+                            ]
+                        )
+                    )
+                ]
+            )
+        self.assertTrue(TestAST.checkASTGen(
+            input, 
+            expect, 
+            365))
+
+    def test_66(self):
+        input = r"""
+        Function: foo
+            Body:
+                foo1();
+                Return foo(fooo({1,2,3} ** Text text text hide**));
+                ** Test comment **
+            EndBody."""
+        expect = Program(
+                [
+                    FuncDecl(
+                        Id("foo"),
+                        [],
+                        (
+                            [],
+                            [
+                                CallStmt(
+                                    Id("foo1"),
+                                    []
+                                ),
+                                Return(
+                                    CallExpr(
+                                        Id("foo"),
+                                        [
+                                            CallExpr(
+                                                Id("fooo"),
+                                                [
+                                                    ArrayLiteral(
+                                                        [
+                                                            IntLiteral(1),
+                                                            IntLiteral(2),
+                                                            IntLiteral(3)
+                                                        ]
+                                                    )
+                                                ]
+                                            )
+                                        ]
+                                    )
+                                )
+                            ]
+                        )
+                    )
+                ]
+            )
+        self.assertTrue(TestAST.checkASTGen(
+            input, 
+            expect, 
+            366))
+
+    def test_67(self):
+        input = r"""
+        Function: foo
+            Body:
+                foo1({1,2,3}[3]);
+                Return foo(fooo({1,2,3}));
+                ** Test comment **
+            EndBody."""
+        expect = Program(
+                [
+                    FuncDecl(
+                        Id("foo"),
+                        [],
+                        (
+                            [],
+                            [
+                                CallStmt(
+                                    Id("foo1"),
+                                    [
+                                        ArrayCell(
+                                            ArrayLiteral(
+                                                [
+                                                    IntLiteral(1),
+                                                    IntLiteral(2),
+                                                    IntLiteral(3)
+                                                ]
+                                            ),
+                                            [
+                                                IntLiteral(3)
+                                            ]
+                                        )
+                                    ]
+                                ),
+                                Return(
+                                    CallExpr(
+                                        Id("foo"),
+                                        [
+                                            CallExpr(
+                                                Id("fooo"),
+                                                [
+                                                    ArrayLiteral(
+                                                        [
+                                                            IntLiteral(1),
+                                                            IntLiteral(2),
+                                                            IntLiteral(3)
+                                                        ]
+                                                    )
+                                                ]
+                                            )
+                                        ]
+                                    )
+                                )
+                            ]
+                        )
+                    )
+                ]
+            )
+        self.assertTrue(TestAST.checkASTGen(
+            input, 
+            expect, 
+            367))
+
+    def test_68(self):
+        input = r"""
+        Function: foo
+            Body:
+                foo1({1,2,3}[3], 2*{1,2,3}[2]);
+                Return foo(fooo({1,2,3}));
+                ** Test comment **
+            EndBody."""
+        expect = Program(
+                [
+                    FuncDecl(
+                        Id("foo"),
+                        [],
+                        (
+                            [],
+                            [
+                                CallStmt(
+                                    Id("foo1"),
+                                    [
+                                        ArrayCell(
+                                            ArrayLiteral(
+                                                [
+                                                    IntLiteral(1),
+                                                    IntLiteral(2),
+                                                    IntLiteral(3)
+                                                ]
+                                            ),
+                                            [
+                                                IntLiteral(3)
+                                            ]
+                                        ),
+                                        BinaryOp(
+                                            "*",
+                                            IntLiteral(2),
+                                            ArrayCell(
+                                                ArrayLiteral(
+                                                    [
+                                                        IntLiteral(1),
+                                                        IntLiteral(2),
+                                                        IntLiteral(3)
+                                                    ]
+                                                ),
+                                                [
+                                                    IntLiteral(2)
+                                                ]
+                                            )
+                                        )
+                                    ]
+                                ),
+                                Return(
+                                    CallExpr(
+                                        Id("foo"),
+                                        [
+                                            CallExpr(
+                                                Id("fooo"),
+                                                [
+                                                    ArrayLiteral(
+                                                        [
+                                                            IntLiteral(1),
+                                                            IntLiteral(2),
+                                                            IntLiteral(3)
+                                                        ]
+                                                    )
+                                                ]
+                                            )
+                                        ]
+                                    )
+                                )
+                            ]
+                        )
+                    )
+                ]
+            )
+        self.assertTrue(TestAST.checkASTGen(
+            input, 
+            expect, 
+            368))
+
+    def test_69(self):
+        input = r"""
+        Function: foo
+        Parameter: x, y, z[1]
+            Body:
+                foo1({1,2,3}[3], 2*{1,2,3}[2]);
+                Return foo(fooo({1,2,3}));
+                ** Test comment **
+            EndBody."""
+        expect = Program(
+                [
+                    FuncDecl(
+                        Id("foo"),
+                        [
+                            VarDecl(
+                                Id("x"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("y"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("z"),
+                                [1],
+                                None
+                            )
+                        ],
+                        (
+                            [],
+                            [
+                                CallStmt(
+                                    Id("foo1"),
+                                    [
+                                        ArrayCell(
+                                            ArrayLiteral(
+                                                [
+                                                    IntLiteral(1),
+                                                    IntLiteral(2),
+                                                    IntLiteral(3)
+                                                ]
+                                            ),
+                                            [
+                                                IntLiteral(3)
+                                            ]
+                                        ),
+                                        BinaryOp(
+                                            "*",
+                                            IntLiteral(2),
+                                            ArrayCell(
+                                                ArrayLiteral(
+                                                    [
+                                                        IntLiteral(1),
+                                                        IntLiteral(2),
+                                                        IntLiteral(3)
+                                                    ]
+                                                ),
+                                                [
+                                                    IntLiteral(2)
+                                                ]
+                                            )
+                                        )
+                                    ]
+                                ),
+                                Return(
+                                    CallExpr(
+                                        Id("foo"),
+                                        [
+                                            CallExpr(
+                                                Id("fooo"),
+                                                [
+                                                    ArrayLiteral(
+                                                        [
+                                                            IntLiteral(1),
+                                                            IntLiteral(2),
+                                                            IntLiteral(3)
+                                                        ]
+                                                    )
+                                                ]
+                                            )
+                                        ]
+                                    )
+                                )
+                            ]
+                        )
+                    )
+                ]
+            )
+        self.assertTrue(TestAST.checkASTGen(
+            input, 
+            expect, 
+            369))

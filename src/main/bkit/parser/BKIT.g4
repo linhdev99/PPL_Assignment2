@@ -38,10 +38,10 @@ var_list: var_normal SEMI;
 var_normal: VAR COLON var_normal_list (COMMA var_normal_list)*;
 var_normal_list: scalar_var_int (EQ (array_lit | all_lit ))? ;
 //var_vt: scalar_var (COMMA scalar_var)*;
-var_vp: array_cell
-      | scalar_var
-      | exp;
-array_cell: LCB (var_vp (COMMA var_vp)*)? RCB;
+//var_vp: array_cell
+//      | scalar_var
+//      | exp;
+//array_cell: LCB (var_vp (COMMA var_vp)*)? RCB;
 
 array_lit_cell: array_lit
               | all_lit;
@@ -116,7 +116,8 @@ return_stmt: RETURN exp? SEMI;
 //Call statment
 //func_call: ID LP ((exp | var_vp) (COMMA (exp | var_vp))*)? RP;
 func_call: ID LP func_call_cell? RP;
-func_call_cell: var_vp (COMMA var_vp)*;
+func_call_cell: exp (COMMA exp)*;
+// func_call_cell: var_vp (COMMA var_vp)*;
 call_stmt: func_call SEMI;
 
 //expression
