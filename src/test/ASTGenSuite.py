@@ -2885,3 +2885,39 @@ EndBody."""
             input,
             expect,
             354))
+
+    def test_55(self):
+        input = """
+Function: main 
+Body:
+    **
+    *Student Name   : Huynh Pham Phuoc Linh
+    *Student ID     : 1710165
+    **
+    print(value);
+    Return;
+EndBody."""
+        expect = Program(
+            [
+                FuncDecl(
+                    Id("main"),
+                    [],
+                    (
+                        [],
+                        [
+                            CallStmt(
+                                Id("print"),
+                                [
+                                    Id("value")
+                                ]
+                            ),
+                            Return(None)
+                        ]
+                    )
+                )
+            ]
+        )
+        self.assertTrue(TestAST.checkASTGen(
+            input,
+            expect,
+            355))
