@@ -2,6 +2,8 @@ import unittest
 from TestUtils import TestAST
 from AST import *
 
+from main.bkit.utils.AST import ArrayLiteral, CallExpr, IntLiteral, StringLiteral, VarDecl
+
 class ASTGenSuite(unittest.TestCase):
     def test_0(self):
         input = r"""Var:x;"""
@@ -2921,3 +2923,235 @@ EndBody."""
             input,
             expect,
             355))
+
+    def test_56(self):
+        input = """
+Function: main 
+Body:
+    **
+    *Student Name   : Huynh Pham Phuoc Linh
+    *Student ID     : 1710165
+    **
+    print(value);
+    Return;
+    ** Comment **
+EndBody."""
+        expect = Program(
+            [
+                FuncDecl(
+                    Id("main"),
+                    [],
+                    (
+                        [],
+                        [
+                            CallStmt(
+                                Id("print"),
+                                [
+                                    Id("value")
+                                ]
+                            ),
+                            Return(None)
+                        ]
+                    )
+                )
+            ]
+        )
+        self.assertTrue(TestAST.checkASTGen(
+            input,
+            expect,
+            356))
+
+    def test_57(self):
+        input = """
+Function: main 
+Body:
+    **
+    *Student Name   : Huynh Pham Phuoc Linh
+    *Student ID     : 1710165
+    **
+    print(value); ** print value of program **
+    Return value;
+    ** Comment **
+EndBody."""
+        expect = Program(
+            [
+                FuncDecl(
+                    Id("main"),
+                    [],
+                    (
+                        [],
+                        [
+                            CallStmt(
+                                Id("print"),
+                                [
+                                    Id("value")
+                                ]
+                            ),
+                            Return(
+                                Id("value")
+                            )
+                        ]
+                    )
+                )
+            ]
+        )
+        self.assertTrue(TestAST.checkASTGen(
+            input,
+            expect,
+            357))
+
+    def test_58(self):
+        input = """
+Function: main 
+Body:
+    **
+    *Student Name   : Huynh Pham Phuoc Linh
+    *Student ID     : 1710165
+    **
+    If checkFoo() Then
+        ** Comment 1 **
+        Return 1;
+    Else
+        ** Comment 2 **
+        Return 2;
+    EndIf
+EndBody."""
+        expect = Program(
+            [
+                FuncDecl(
+                    Id("main"),
+                    [],
+                    (
+                        [],
+                        [
+                            If(
+                                [
+                                    (
+                                        CallExpr(
+                                            Id("checkFoo"),
+                                            []
+                                        ),
+                                        [],
+                                        [
+                                            Return(
+                                                IntLiteral(1)
+                                            )
+                                        ]
+                                    )
+                                ],
+                                (
+                                    [],
+                                    [
+                                        Return(
+                                            IntLiteral(2)
+                                        )
+                                    ]
+                                )
+                            )
+                        ]
+                    )
+                )
+            ]
+        )
+        self.assertTrue(TestAST.checkASTGen(
+            input,
+            expect,
+            358))
+
+    def test_59(self):
+        input = """
+Function: main 
+Body:
+    **
+    *Student Name   : Huynh Pham Phuoc Linh
+    *Student ID     : 1710165
+    **
+    If checkFoo() == "verify" Then
+        ** Comment 1 **
+        Var: x[3] = {1,2,3}
+        Return x[0] + x[1] * x[2];
+    Else
+        ** Comment 2 **
+        Return 2;
+    EndIf
+EndBody."""
+        expect = Program(
+            [
+                FuncDecl(
+                    Id("main"),
+                    [],
+                    (
+                        [],
+                        [
+                            If(
+                                [
+                                    (
+                                        BinaryOp(
+                                            "==",
+                                            CallExpr(
+                                                Id("checkFoo"),
+                                                []
+                                            ),
+                                            StringLiteral("verify")
+                                        ),
+                                        [
+                                            VarDecl(
+                                                Id("x"),
+                                                [3],
+                                                ArrayLiteral(
+                                                    [
+                                                        IntLiteral(1),
+                                                        IntLiteral(2),
+                                                        IntLiteral(3)
+                                                    ]
+                                                )
+                                            )
+                                        ],
+                                        [
+                                            Return(
+                                                BinaryOp(
+                                                    "+",
+                                                    ArrayCell(
+                                                        Id("x"),
+                                                        [
+                                                            IntLiteral(0)
+                                                        ]
+                                                    ),
+                                                    BinaryOp(
+                                                        "*",
+                                                        ArrayCell(
+                                                            Id("x"),
+                                                            [
+                                                                IntLiteral(1)
+                                                            ]
+                                                        ),
+                                                        ArrayCell(
+                                                            Id("x"),
+                                                            [
+                                                                IntLiteral(2)
+                                                            ]
+                                                        )
+                                                    )
+                                                )
+                                            )
+                                        ]
+                                    )
+                                ],
+                                (
+                                    [],
+                                    [
+                                        Return(
+                                            IntLiteral(2)
+                                        )
+                                    ]
+                                )
+                            )
+                        ]
+                    )
+                )
+            ]
+        )
+        self.assertTrue(TestAST.checkASTGen(
+            input,
+            expect,
+            359))
