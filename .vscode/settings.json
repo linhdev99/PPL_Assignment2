@@ -1,7 +1,7 @@
 {
     "python.pythonPath": "C:\\Users\\Administrator\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
     "python.analysis.diagnosticSeverityOverrides": {
-        "reportMissingImports": "none",
-        "reportUndefinedVariable": "none"
+        //"reportMissingImports": "none",
+        //"reportUndefinedVariable": "none"
     }
 }

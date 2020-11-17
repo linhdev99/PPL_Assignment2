@@ -15,51 +15,51 @@ class ASTGeneration(BKITVisitor):
 
     def visitMain(self, ctx:BKITParser.MainContext):
         if ctx.var_declare():
-            return self.visitVarDecl(ctx.var_declare())
+            return self.visitVar_declare(ctx.var_declare())
         else:
-            return self.visitFuncDecl(ctx.func_declare())
+            return self.visitFunc_declare(ctx.func_declare())
 
-    def visitVarDecl(self, ctx:BKITParser.Var_declareContext):
-        return self.visitVarList(ctx.var_list())
+    def visitVar_declare(self, ctx:BKITParser.Var_declareContext):
+        return self.visitVar_list(ctx.var_list())
 
-    def visitVarList(self, ctx:BKITParser.Var_listContext):
-        return self.visitVarNormal(ctx.var_normal())
+    def visitVar_list(self, ctx:BKITParser.Var_listContext):
+        return self.visitVar_normal(ctx.var_normal())
 
-    def visitVarNormal(self, ctx:BKITParser.Var_normalContext):
+    def visitVar_normal(self, ctx:BKITParser.Var_normalContext):
         varListDecl = []
         for x in ctx.var_normal_list():
-            temp = self.visitVarNormalList(x)
+            temp = self.visitVar_normal_list(x)
             if isinstance(temp, list):
                 varListDecl.extend(temp if temp else [])
             else:
                 varListDecl.append(temp)
         return varListDecl
 
-    def visitVarNormalList(self, ctx:BKITParser.Var_normal_listContext):
-        m_getScalarVar = self.visitScalarVarInt(ctx.scalar_var_int())
+    def visitVar_normal_list(self, ctx:BKITParser.Var_normal_listContext):
+        m_getScalarVar = self.visitScalar_var_int(ctx.scalar_var_int())
         m_variable = m_getScalarVar[0]
         m_varDimen = m_getScalarVar[1]
         m_varInit = None
         if ctx.array_lit():
-            m_varInit = self.visitArrayLiteral(ctx.array_lit())
+            m_varInit = self.visitArray_lit(ctx.array_lit())
             return VarDecl(m_variable,m_varDimen,m_varInit)
         elif ctx.all_lit():
-            m_varInit = self.visitAllLiteral(ctx.all_lit())
+            m_varInit = self.visitAll_lit(ctx.all_lit())
             return VarDecl(m_variable,m_varDimen,m_varInit)
         else:
             return VarDecl(m_variable,m_varDimen,m_varInit)
 
-    def visitScalarVarInt(self, ctx:BKITParser.Scalar_var_intContext):
+    def visitScalar_var_int(self, ctx:BKITParser.Scalar_var_intContext):
         if ctx.getChildCount() > 1:
             listIndex = []
             for x in ctx.index_var_int():
-                valueIndex = self.visitIndexVarInt(x)
+                valueIndex = self.visitIndex_var_int(x)
                 listIndex.append(valueIndex)
             return [Id(ctx.ID().getText()),listIndex]
         else:
             return [Id(ctx.ID().getText()),[]]
 
-    def visitIndexVarInt(self,ctx:BKITParser.Index_var_intContext):
+    def visitIndex_var_int(self,ctx:BKITParser.Index_var_intContext):
         valueBase = ctx.INTLIT().getText()
         flag = 0
         for x in valueBase:
@@ -76,31 +76,31 @@ class ASTGeneration(BKITVisitor):
         if flag == 2:
             return int(valueBase, 8)
 
-    def visitAllLiteral(self,ctx:BKITParser.All_litContext):
+    def visitAll_lit(self,ctx:BKITParser.All_litContext):
         if ctx.int_lit():
-            return self.visitIntLiteral(ctx.int_lit())
+            return self.visitInt_lit(ctx.int_lit())
         elif ctx.float_lit():
-            return self.visitFloatLiteral(ctx.float_lit())
+            return self.visitFloat_lit(ctx.float_lit())
         elif ctx.string_lit():
-            return self.visitStringLiteral(ctx.string_lit())
+            return self.visitString_lit(ctx.string_lit())
         elif ctx.bool_lit():
-            return self.visitBooleanLiteral(ctx.bool_lit())
+            return self.visitBool_lit(ctx.bool_lit())
 
-    def visitFuncDecl(self, ctx:BKITParser.Func_declareContext):
+    def visitFunc_declare(self, ctx:BKITParser.Func_declareContext):
         getIdFunc = Id(ctx.ID().getText())
         if ctx.parameter_func():
-            listParameter = self.visitParameterFunc(ctx.parameter_func())
+            listParameter = self.visitParameter_func(ctx.parameter_func())
         else:
             listParameter = []
-        getBodyDecl = self.visitBodyDecl(ctx.body_declare())
+        getBodyDecl = self.visitBody_declare(ctx.body_declare())
         listVarDecl = getBodyDecl[0]
         listStmt = getBodyDecl[1]
         return FuncDecl(getIdFunc,listParameter,(listVarDecl,listStmt))
 
-    def visitParameterFunc(self,ctx:BKITParser.Parameter_funcContext):
+    def visitParameter_func(self,ctx:BKITParser.Parameter_funcContext):
         temp = []
         for x in ctx.scalar_var_int():
-            m_getScalarVar = self.visitScalarVarInt(x)
+            m_getScalarVar = self.visitScalar_var_int(x)
             m_variable = m_getScalarVar[0]
             m_varDimen = m_getScalarVar[1]
             m_varInit = None
@@ -111,7 +111,7 @@ class ASTGeneration(BKITVisitor):
                 temp.append(totalValue)
         return temp
 
-    def visitBodyDecl(self,ctx:BKITParser.Body_declareContext):
+    def visitBody_declare(self,ctx:BKITParser.Body_declareContext):
         temp_var = []
         temp_stmt = []
         for x in ctx.body():
@@ -133,7 +133,7 @@ class ASTGeneration(BKITVisitor):
 
     def visitBody(self,ctx:BKITParser.BodyContext):
         if ctx.var_declare():
-            return [0,self.visitVarDecl(ctx.var_declare())]
+            return [0,self.visitVar_declare(ctx.var_declare())]
         else:
             temp = self.visitStmt(ctx.stmt())
             arr = [1]
@@ -145,33 +145,33 @@ class ASTGeneration(BKITVisitor):
 
     def visitStmt(self,ctx:BKITParser.StmtContext):
         if ctx.stmt_notfunc():
-            return self.visitStmtNotFunc(ctx.stmt_notfunc())
+            return self.visitStmt_notfunc(ctx.stmt_notfunc())
         else:
-            return self.visitStmtSpecial(ctx.stmt_spe())
+            return self.visitStmt_spe(ctx.stmt_spe())
 
-    def visitStmtNotFunc(self,ctx:BKITParser.Stmt_notfuncContext):
+    def visitStmt_notfunc(self,ctx:BKITParser.Stmt_notfuncContext):
         if ctx.if_stmt():
-            return self.visitIf(ctx.if_stmt())
+            return self.visitIf_stmt(ctx.if_stmt())
         elif ctx.for_stmt():
-            return self.visitFor(ctx.for_stmt())
+            return self.visitFor_stmt(ctx.for_stmt())
         elif ctx.while_stmt():
-            return self.visitWhile(ctx.while_stmt())
+            return self.visitWhile_stmt(ctx.while_stmt())
         elif ctx.doWhile_stmt():
-            return self.visitDowhile(ctx.doWhile_stmt())
+            return self.visitDoWhile_stmt(ctx.doWhile_stmt())
 
-    def visitStmtSpecial(self,ctx:BKITParser.Stmt_speContext):
+    def visitStmt_spe(self,ctx:BKITParser.Stmt_speContext):
         if ctx.assign_stmt():
-            return self.visitAssign(ctx.assign_stmt())
+            return self.visitAssign_stmt(ctx.assign_stmt())
         elif ctx.break_stmt():
-            return self.visitBreak(ctx.break_stmt())
+            return self.visitBreak_stmt(ctx.break_stmt())
         elif ctx.continue_stmt():
-            return self.visitContinue(ctx.continue_stmt())
+            return self.visitContinue_stmt(ctx.continue_stmt())
         elif ctx.return_stmt():
-            return self.visitReturn(ctx.return_stmt())
+            return self.visitReturn_stmt(ctx.return_stmt())
         elif ctx.call_stmt():
-            return self.visitCallStmt(ctx.call_stmt())
+            return self.visitCall_stmt(ctx.call_stmt())
 
-    def visitCallExpr(self, ctx:BKITParser.ExpContext):
+    def visitExp(self, ctx:BKITParser.ExpContext):
         if ctx.RELATIONAL():
             return BinaryOp(
                 ctx.RELATIONAL().getText(),
@@ -289,7 +289,7 @@ class ASTGeneration(BKITVisitor):
     def visitExp6(self,ctx:BKITParser.Exp6Context):
         if ctx.op_index():
             getID = self.visitExp6(ctx.exp6())
-            getOpIdx = self.visitOpIndex(ctx.op_index())
+            getOpIdx = self.visitOp_index(ctx.op_index())
             if isinstance(getID, list):
                 value = []
                 value.extend(getID[1])
@@ -301,51 +301,51 @@ class ASTGeneration(BKITVisitor):
             temp = self.visitOperands(ctx.operands())
             return temp
 
-    def visitOpIndex(self,ctx:BKITParser.Op_indexContext):
-        temp = self.visitCallExpr(ctx.exp())
+    def visitOp_index(self,ctx:BKITParser.Op_indexContext):
+        temp = self.visitExp(ctx.exp())
         return temp
 
     def visitOperands(self,ctx:BKITParser.OperandsContext):
         if ctx.LP():
-            return self.visitCallExpr(ctx.exp())
+            return self.visitExp(ctx.exp())
         elif ctx.func_call():
-            value = self.visitFuncCall(ctx.func_call())
+            value = self.visitFunc_call(ctx.func_call())
             return CallExpr(value[0], value[1])
         elif ctx.LCB():
             listLiteral = []
             for x in ctx.all_lit():
-                temp = self.visitAllLiteral(x)
+                temp = self.visitAll_lit(x)
                 if isinstance(temp, list):
                     listLiteral.extend(temp if temp else [])
                 else:
                     listLiteral.append(temp)
             return ArrayLiteral(listLiteral)
         elif ctx.all_lit(0):
-            return self.visitAllLiteral(ctx.all_lit(0))
+            return self.visitAll_lit(ctx.all_lit(0))
         elif ctx.ID():
             return Id(ctx.ID().getText())
 
-    def visitArrayCell(self, ctx:BKITParser.Array_cellContext):
+    def visitArray_cell(self, ctx:BKITParser.Array_cellContext):
         temp = []
         for x in ctx.var_vp():
-            valueCell = self.visitVarVP(x)
+            valueCell = self.visitVar_vp(x)
             if isinstance(valueCell, list):
                 temp.extend(valueCell if valueCell else [])
             else:
                 temp.append(valueCell)
         return temp
 
-    def visitAssign(self, ctx:BKITParser.Assign_stmtContext):
-        temp_lhs = self.visitCallExpr(ctx.exp(0))
-        temp_rhs = self.visitCallExpr(ctx.exp(1))
+    def visitAssign_stmt(self, ctx:BKITParser.Assign_stmtContext):
+        temp_lhs = self.visitExp(ctx.exp(0))
+        temp_rhs = self.visitExp(ctx.exp(1))
         return Assign(temp_lhs, temp_rhs)
 
-    def visitScalarVar(self,ctx:BKITParser.Scalar_varContext):
+    def visitScalar_var(self,ctx:BKITParser.Scalar_varContext):
         temp_expr = Id(ctx.ID().getText())
         if ctx.index_var():
             temp_index = []
             for x in ctx.index_var():
-                value = self.visitIndexVar(ctx.index_var())
+                value = self.visitIndex_var(ctx.index_var())
                 if isinstance(value, list):
                     temp_index.extend(value if value else [])
                 else:
@@ -354,11 +354,11 @@ class ASTGeneration(BKITVisitor):
         else:
             return temp_expr
 
-    def visitIndexVar(self,ctx:BKITParser.Index_varContext):
-        return self.visitCallExpr(ctx.exp())
+    def visitIndex_var(self,ctx:BKITParser.Index_varContext):
+        return self.visitExp(ctx.exp())
 
-    def visitIf(self, ctx:BKITParser.If_stmtContext):
-        tempExpr = self.visitCallExpr(ctx.exp())
+    def visitIf_stmt(self, ctx:BKITParser.If_stmtContext):
+        tempExpr = self.visitExp(ctx.exp())
 
         tempBody = []
         tempElseIf = []
@@ -386,7 +386,7 @@ class ASTGeneration(BKITVisitor):
         listIfThenStmt.append(tupleIfStmt)
 
         for x in ctx.elseif_stmt():
-            temp = self.visitElseIf(x)
+            temp = self.visitElseif_stmt(x)
             if isinstance(temp, list):
                 tempElseIf.extend(temp if temp else [])
             else:
@@ -395,13 +395,13 @@ class ASTGeneration(BKITVisitor):
             listIfThenStmt.extend(tempElseIf)
 
         if ctx.else_stmt():
-            tempElse = self.visitElse(ctx.else_stmt())
+            tempElse = self.visitElse_stmt(ctx.else_stmt())
         tupleElseStmt = tempElse
 
         return If(listIfThenStmt,tupleElseStmt)
 
-    def visitElseIf(self,ctx:BKITParser.Elseif_stmtContext):
-        tempExpr = self.visitCallExpr(ctx.exp())
+    def visitElseif_stmt(self,ctx:BKITParser.Elseif_stmtContext):
+        tempExpr = self.visitExp(ctx.exp())
         tempBody = []
         temp_var = []
         temp_stmt = []
@@ -421,7 +421,7 @@ class ASTGeneration(BKITVisitor):
         tempBody.append(temp_stmt)
         return (tempExpr, tempBody[0], tempBody[1])
 
-    def visitElse(self,ctx:BKITParser.Else_stmtContext):
+    def visitElse_stmt(self,ctx:BKITParser.Else_stmtContext):
         tempBody = []
         temp_var = []
         temp_stmt = []
@@ -441,7 +441,7 @@ class ASTGeneration(BKITVisitor):
         tempBody.append(temp_stmt)
         return (tempBody[0], tempBody[1])
 
-    def visitFor(self, ctx:BKITParser.For_stmtContext):
+    def visitFor_stmt(self, ctx:BKITParser.For_stmtContext):
         """
         idx1: Id
         expr1:Expr
@@ -450,7 +450,7 @@ class ASTGeneration(BKITVisitor):
         loop: Tuple[List[VarDecl],List[Stmt]]
         """
         getID = Id(ctx.ID().getText())
-        getExpr1 = self.visitCallExpr(ctx.exp())
+        getExpr1 = self.visitExp(ctx.exp())
         getExpr2 = self.visitConditionExpr(ctx.conditionExpr())
         getExpr3 = self.visitUpdateExpr(ctx.updateExpr())
         tempBody = []
@@ -474,29 +474,29 @@ class ASTGeneration(BKITVisitor):
         return For(getID, getExpr1, getExpr2, getExpr3, getLoop)
 
     def visitConditionExpr(self,ctx:BKITParser.ConditionExprContext):
-        return self.visitCallExpr(ctx.exp())
+        return self.visitExp(ctx.exp())
 
     def visitUpdateExpr(self,ctx:BKITParser.UpdateExprContext):
-        return self.visitCallExpr(ctx.exp())
+        return self.visitExp(ctx.exp())
 
-    def visitContinue(self, ctx:BKITParser.Continue_stmtContext):
+    def visitContinue_stmt(self, ctx:BKITParser.Continue_stmtContext):
         return Continue()
 
-    def visitBreak(self, ctx:BKITParser.Break_stmtContext):
+    def visitBreak_stmt(self, ctx:BKITParser.Break_stmtContext):
         return Break()
 
-    def visitReturn(self, ctx:BKITParser.Return_stmtContext):
+    def visitReturn_stmt(self, ctx:BKITParser.Return_stmtContext):
         temp = None
         if ctx.exp():
-            temp = self.visitCallExpr(ctx.exp())
+            temp = self.visitExp(ctx.exp())
         return Return(temp)
 
-    def visitDowhile(self, ctx:BKITParser.DoWhile_stmtContext):
+    def visitDoWhile_stmt(self, ctx:BKITParser.DoWhile_stmtContext):
         """
         sl:Tuple[List[VarDecl],List[Stmt]]
         exp: Expr
         """
-        getExpr = self.visitCallExpr(ctx.exp())
+        getExpr = self.visitExp(ctx.exp())
         tempBody = []
         temp_var = []
         temp_stmt = []
@@ -517,12 +517,12 @@ class ASTGeneration(BKITVisitor):
         getBody = (tempBody[0], tempBody[1])
         return Dowhile(getBody, getExpr)
 
-    def visitWhile(self, ctx:BKITParser.While_stmtContext):
+    def visitWhile_stmt(self, ctx:BKITParser.While_stmtContext):
         """
         exp: Expr
         sl:Tuple[List[VarDecl],List[Stmt]]
         """
-        getExpr = self.visitCallExpr(ctx.exp())
+        getExpr = self.visitExp(ctx.exp())
         tempBody = []
         temp_var = []
         temp_stmt = []
@@ -543,35 +543,35 @@ class ASTGeneration(BKITVisitor):
         getBody = (tempBody[0], tempBody[1])
         return While(getExpr, getBody)
 
-    def visitCallStmt(self, ctx:BKITParser.Call_stmtContext):
-        value = self.visitFuncCall(ctx.func_call())
+    def visitCall_stmt(self, ctx:BKITParser.Call_stmtContext):
+        value = self.visitFunc_call(ctx.func_call())
         return CallStmt(value[0], value[1])
 
-    def visitFuncCall(self,ctx:BKITParser.Func_callContext):
+    def visitFunc_call(self,ctx:BKITParser.Func_callContext):
         if ctx.func_call_cell():
-            return [Id(ctx.ID().getText()),self.visitFuncCallCell(ctx.func_call_cell())]
+            return [Id(ctx.ID().getText()),self.visitFunc_call_cell(ctx.func_call_cell())]
         else:
             return [Id(ctx.ID().getText()),[]]
 
-    def visitFuncCallCell(self,ctx:BKITParser.Func_call_cellContext):
+    def visitFunc_call_cell(self,ctx:BKITParser.Func_call_cellContext):
         temp = []
         for x in ctx.var_vp():
-            valueCell = self.visitVarVP(x)
+            valueCell = self.visitVar_vp(x)
             if isinstance(valueCell, list):
                 temp.extend(valueCell if valueCell else [])
             else:
                 temp.append(valueCell)
         return temp
 
-    def visitVarVP(self,ctx:BKITParser.Var_vpContext):
+    def visitVar_vp(self,ctx:BKITParser.Var_vpContext):
         if ctx.exp():
-            return self.visitCallExpr(ctx.exp())
+            return self.visitExp(ctx.exp())
         elif ctx.array_cell():
-            return self.visitArrayCell(ctx.array_cell())
+            return self.visitArray_cell(ctx.array_cell())
         elif ctx.scalar_var():
-            return self.visitScalarVar(ctx.scalar_var())
+            return self.visitScalar_var(ctx.scalar_var())
 
-    def visitIntLiteral(self, ctx:BKITParser.Int_litContext):
+    def visitInt_lit(self, ctx:BKITParser.Int_litContext):
         valueBase = ctx.INTLIT().getText()
         flag = 0
         for x in valueBase:
@@ -588,34 +588,34 @@ class ASTGeneration(BKITVisitor):
         if flag == 2:
             return IntLiteral(int(valueBase, 8))
 
-    def visitFloatLiteral(self, ctx:BKITParser.Float_litContext):
+    def visitFloat_lit(self, ctx:BKITParser.Float_litContext):
         return FloatLiteral(float(ctx.FLOATLIT().getText()))
 
-    def visitBooleanLiteral(self, ctx:BKITParser.Bool_litContext):
+    def visitBool_lit(self, ctx:BKITParser.Bool_litContext):
         if ctx.TRUE():
             return BooleanLiteral(ctx.TRUE().getText())
         else:
             return BooleanLiteral(ctx.FALSE().getText())
 
-    def visitStringLiteral(self, ctx:BKITParser.String_litContext):
+    def visitString_lit(self, ctx:BKITParser.String_litContext):
         return StringLiteral(ctx.STRINGLIT().getText())
 
-    def visitArrayLiteral(self, ctx:BKITParser.Array_litContext):
+    def visitArray_lit(self, ctx:BKITParser.Array_litContext):
         temp = []
         for x in ctx.array_lit_cell():
-            # temp.extend(self.visitArrayLitCell(x))
-            valueCell = self.visitArrayLitCell(x)
+            # temp.extend(self.visitArray_lit_cell(x))
+            valueCell = self.visitArray_lit_cell(x)
             if isinstance(valueCell, list):
                 temp.extend(valueCell if valueCell else [])
             else:
                 temp.append(valueCell)
         return ArrayLiteral(temp)
 
-    def visitArrayLitCell(self,ctx:BKITParser.Array_lit_cellContext):
+    def visitArray_lit_cell(self,ctx:BKITParser.Array_lit_cellContext):
         if ctx.all_lit():
-            return self.visitAllLiteral(ctx.all_lit())
+            return self.visitAll_lit(ctx.all_lit())
         else:
-            return self.visitArrayLiteral(ctx.array_lit())
+            return self.visitArray_lit(ctx.array_lit())
 
     def getOnlyValueLiteral(self,ctx:BKITParser.All_litContext):
         if ctx.int_lit():
