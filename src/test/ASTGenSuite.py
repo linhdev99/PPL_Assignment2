@@ -2,7 +2,7 @@ import unittest
 from TestUtils import TestAST
 from AST import *
 
-from main.bkit.utils.AST import ArrayCell, ArrayLiteral, BinaryOp, BooleanLiteral, IntLiteral, VarDecl
+from main.bkit.utils.AST import ArrayCell, ArrayLiteral, BinaryOp, BooleanLiteral, CallStmt, Dowhile, Id, IntLiteral, StringLiteral, VarDecl
 
 class ASTGenSuite(unittest.TestCase):
     def test_0(self):
@@ -3832,3 +3832,2661 @@ Var: x = 1;"""
             input, 
             expect, 
             370))
+
+    def test_71(self):
+        input = r"""
+        Function: foo
+        Parameter: x, y, z[1]
+            Body:
+                ** Test If statement **
+                Var: x = True, y = False;
+                If True Then
+                    zoo(1);
+                EndIf.
+            EndBody."""
+        expect = Program(
+                [
+                    FuncDecl(
+                        Id("foo"),
+                        [
+                            VarDecl(
+                                Id("x"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("y"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("z"),
+                                [1],
+                                None
+                            )
+                        ],
+                        (
+                            [
+                                VarDecl(
+                                    Id("x"),
+                                    [],
+                                    BooleanLiteral(True)
+                                ),
+                                VarDecl(
+                                    Id("y"),
+                                    [],
+                                    BooleanLiteral(False)
+                                )
+                            ],
+                            [
+                                If(
+                                    [
+                                        (
+                                            BooleanLiteral(True),
+                                            [],
+                                            [
+                                                CallStmt(
+                                                    Id("zoo"),
+                                                    [
+                                                        IntLiteral(1)
+                                                    ]
+                                                )
+                                            ]
+                                        )
+                                    ],
+                                    (
+                                        [],
+                                        []
+                                    )
+                                )
+                            ]
+                        )
+                    )
+                ]
+            )
+        self.assertTrue(TestAST.checkASTGen(
+            input, 
+            expect, 
+            371))
+
+    def test_72(self):
+        input = r"""
+        Function: foo
+        Parameter: x, y, z[1]
+            Body:
+                ** Test 3 If statement **
+                Var: x = True, y = False;
+                If True Then
+                    zoo(1);
+                ElseIf y Then
+                    print(0xA);
+                EndIf.
+            EndBody."""
+        expect = Program(
+                [
+                    FuncDecl(
+                        Id("foo"),
+                        [
+                            VarDecl(
+                                Id("x"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("y"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("z"),
+                                [1],
+                                None
+                            )
+                        ],
+                        (
+                            [
+                                VarDecl(
+                                    Id("x"),
+                                    [],
+                                    BooleanLiteral(True)
+                                ),
+                                VarDecl(
+                                    Id("y"),
+                                    [],
+                                    BooleanLiteral(False)
+                                )
+                            ],
+                            [
+                                If(
+                                    [
+                                        (
+                                            BooleanLiteral(True),
+                                            [],
+                                            [
+                                                CallStmt(
+                                                    Id("zoo"),
+                                                    [
+                                                        IntLiteral(1)
+                                                    ]
+                                                )
+                                            ]
+                                        ),
+                                        (
+                                            Id("y"),
+                                            [],
+                                            [
+                                                CallStmt(
+                                                    Id("print"),
+                                                    [
+                                                        IntLiteral(10)
+                                                    ]
+                                                )
+                                            ]
+                                        )
+                                    ],
+                                    (
+                                        [],
+                                        []
+                                    )
+                                )
+                            ]
+                        )
+                    )
+                ]
+            )
+        self.assertTrue(TestAST.checkASTGen(
+            input, 
+            expect, 
+            372))
+
+    def test_73(self):
+        input = r"""
+        Function: foo
+        Parameter: x, y, z[1]
+            Body:
+                ** Test 4 If statement **
+                Var: x = True, y = False;
+                If True Then
+                    zoo(1);
+                ElseIf y Then
+                    print(0xA);
+                Else
+                    Var: z = {1,2,3};
+                    w = a && b;
+                EndIf.
+            EndBody."""
+        expect = Program(
+                [
+                    FuncDecl(
+                        Id("foo"),
+                        [
+                            VarDecl(
+                                Id("x"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("y"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("z"),
+                                [1],
+                                None
+                            )
+                        ],
+                        (
+                            [
+                                VarDecl(
+                                    Id("x"),
+                                    [],
+                                    BooleanLiteral(True)
+                                ),
+                                VarDecl(
+                                    Id("y"),
+                                    [],
+                                    BooleanLiteral(False)
+                                )
+                            ],
+                            [
+                                If(
+                                    [
+                                        (
+                                            BooleanLiteral(True),
+                                            [],
+                                            [
+                                                CallStmt(
+                                                    Id("zoo"),
+                                                    [
+                                                        IntLiteral(1)
+                                                    ]
+                                                )
+                                            ]
+                                        ),
+                                        (
+                                            Id("y"),
+                                            [],
+                                            [
+                                                CallStmt(
+                                                    Id("print"),
+                                                    [
+                                                        IntLiteral(10)
+                                                    ]
+                                                )
+                                            ]
+                                        )
+                                    ],
+                                    (
+                                        [
+                                            VarDecl(
+                                                Id("z"),
+                                                [],
+                                                ArrayLiteral(
+                                                    [
+                                                        IntLiteral(1),
+                                                        IntLiteral(2),
+                                                        IntLiteral(3)
+                                                    ]
+                                                )
+                                            )
+                                        ],
+                                        [
+                                            Assign(
+                                                Id("w"),
+                                                BinaryOp(
+                                                    "&&",
+                                                    Id("a"),
+                                                    Id("b")
+                                                )
+                                            )
+                                        ]
+                                    )
+                                )
+                            ]
+                        )
+                    )
+                ]
+            )
+        self.assertTrue(TestAST.checkASTGen(
+            input, 
+            expect, 
+            373))
+
+    def test_74(self):
+        input = r"""
+        Function: foo
+        Parameter: x, y, z[1]
+            Body:
+                ** Test 5 If statement **
+                Var: x = True, y = False;
+                If True Then
+                    zoo(1);
+                ElseIf y Then
+                    print(0xA);
+                    ** Test 5 thoi! **
+                Else
+                    Var: z = {1,2,3};
+                    w = a && b;
+                EndIf.
+            EndBody."""
+        expect = Program(
+                [
+                    FuncDecl(
+                        Id("foo"),
+                        [
+                            VarDecl(
+                                Id("x"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("y"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("z"),
+                                [1],
+                                None
+                            )
+                        ],
+                        (
+                            [
+                                VarDecl(
+                                    Id("x"),
+                                    [],
+                                    BooleanLiteral(True)
+                                ),
+                                VarDecl(
+                                    Id("y"),
+                                    [],
+                                    BooleanLiteral(False)
+                                )
+                            ],
+                            [
+                                If(
+                                    [
+                                        (
+                                            BooleanLiteral(True),
+                                            [],
+                                            [
+                                                CallStmt(
+                                                    Id("zoo"),
+                                                    [
+                                                        IntLiteral(1)
+                                                    ]
+                                                )
+                                            ]
+                                        ),
+                                        (
+                                            Id("y"),
+                                            [],
+                                            [
+                                                CallStmt(
+                                                    Id("print"),
+                                                    [
+                                                        IntLiteral(10)
+                                                    ]
+                                                )
+                                            ]
+                                        )
+                                    ],
+                                    (
+                                        [
+                                            VarDecl(
+                                                Id("z"),
+                                                [],
+                                                ArrayLiteral(
+                                                    [
+                                                        IntLiteral(1),
+                                                        IntLiteral(2),
+                                                        IntLiteral(3)
+                                                    ]
+                                                )
+                                            )
+                                        ],
+                                        [
+                                            Assign(
+                                                Id("w"),
+                                                BinaryOp(
+                                                    "&&",
+                                                    Id("a"),
+                                                    Id("b")
+                                                )
+                                            )
+                                        ]
+                                    )
+                                )
+                            ]
+                        )
+                    )
+                ]
+            )
+        self.assertTrue(TestAST.checkASTGen(
+            input, 
+            expect, 
+            374))
+
+    def test_75(self):
+        input = r"""
+        Function: foo
+        Parameter: x, y, z[1]
+            Body:
+                ** Test 6 If statement **
+                Var: x = True, y = False;
+                If True Then
+                    Var: d[1];
+                    zoo(1);
+                ElseIf y Then
+                    print(0xA);
+                Else
+                    Var: z = {1,2,3};
+                    w = a && b;
+                EndIf.
+            EndBody."""
+        expect = Program(
+                [
+                    FuncDecl(
+                        Id("foo"),
+                        [
+                            VarDecl(
+                                Id("x"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("y"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("z"),
+                                [1],
+                                None
+                            )
+                        ],
+                        (
+                            [
+                                VarDecl(
+                                    Id("x"),
+                                    [],
+                                    BooleanLiteral(True)
+                                ),
+                                VarDecl(
+                                    Id("y"),
+                                    [],
+                                    BooleanLiteral(False)
+                                )
+                            ],
+                            [
+                                If(
+                                    [
+                                        (
+                                            BooleanLiteral(True),
+                                            [
+                                                VarDecl(
+                                                    Id("d"),
+                                                    [1],
+                                                    None
+                                                )
+                                            ],
+                                            [
+                                                CallStmt(
+                                                    Id("zoo"),
+                                                    [
+                                                        IntLiteral(1)
+                                                    ]
+                                                )
+                                            ]
+                                        ),
+                                        (
+                                            Id("y"),
+                                            [],
+                                            [
+                                                CallStmt(
+                                                    Id("print"),
+                                                    [
+                                                        IntLiteral(10)
+                                                    ]
+                                                )
+                                            ]
+                                        )
+                                    ],
+                                    (
+                                        [
+                                            VarDecl(
+                                                Id("z"),
+                                                [],
+                                                ArrayLiteral(
+                                                    [
+                                                        IntLiteral(1),
+                                                        IntLiteral(2),
+                                                        IntLiteral(3)
+                                                    ]
+                                                )
+                                            )
+                                        ],
+                                        [
+                                            Assign(
+                                                Id("w"),
+                                                BinaryOp(
+                                                    "&&",
+                                                    Id("a"),
+                                                    Id("b")
+                                                )
+                                            )
+                                        ]
+                                    )
+                                )
+                            ]
+                        )
+                    )
+                ]
+            )
+        self.assertTrue(TestAST.checkASTGen(
+            input, 
+            expect, 
+            375))
+
+    def test_76(self):
+        input = r"""
+        Function: foo
+        Parameter: x, y, z[1]
+            Body:
+                ** Test 1 For Statement **
+                For (x = 0, x < 5, 2) Do
+                EndFor.
+            EndBody."""
+        expect = Program(
+                [
+                    FuncDecl(
+                        Id("foo"),
+                        [
+                            VarDecl(
+                                Id("x"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("y"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("z"),
+                                [1],
+                                None
+                            )
+                        ],
+                        (
+                            [],
+                            [
+                                For(
+                                    Id("x"),
+                                    IntLiteral(0),
+                                    BinaryOp(
+                                        "<",
+                                        Id("x"),
+                                        IntLiteral(5)
+                                    ),
+                                    IntLiteral(2),
+                                    (
+                                        [],
+                                        []
+                                    )
+                                )
+                            ]
+                        )
+                    )
+                ]
+            )
+        self.assertTrue(TestAST.checkASTGen(
+            input, 
+            expect, 
+            376))
+
+    def test_77(self):
+        input = r"""
+        Function: foo
+        Parameter: x, y, z[1]
+            Body:
+                ** Test 2 For Statement **
+                For (x = 0, x < 5, 2) Do
+                    Var: abc[2] = {0x1, 0x2};
+                EndFor.
+            EndBody."""
+        expect = Program(
+                [
+                    FuncDecl(
+                        Id("foo"),
+                        [
+                            VarDecl(
+                                Id("x"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("y"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("z"),
+                                [1],
+                                None
+                            )
+                        ],
+                        (
+                            [],
+                            [
+                                For(
+                                    Id("x"),
+                                    IntLiteral(0),
+                                    BinaryOp(
+                                        "<",
+                                        Id("x"),
+                                        IntLiteral(5)
+                                    ),
+                                    IntLiteral(2),
+                                    (
+                                        [
+                                            VarDecl(
+                                                Id("abc"),
+                                                [2],
+                                                ArrayLiteral(
+                                                    [
+                                                        IntLiteral(1),
+                                                        IntLiteral(2)
+                                                    ]
+                                                )
+                                            )
+                                        ],
+                                        []
+                                    )
+                                )
+                            ]
+                        )
+                    )
+                ]
+            )
+        self.assertTrue(TestAST.checkASTGen(
+            input, 
+            expect, 
+            377))
+
+    def test_78(self):
+        input = r"""
+        Function: foo
+        Parameter: x, y, z[1]
+            Body:
+                ** Test 3 For Statement **
+                For (x = 0, x < 5, 2) Do
+                    Var: abc[2] = {0x1, 0x2};
+                    abc = {0,2,3}[1];
+                EndFor.
+            EndBody."""
+        expect = Program(
+                [
+                    FuncDecl(
+                        Id("foo"),
+                        [
+                            VarDecl(
+                                Id("x"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("y"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("z"),
+                                [1],
+                                None
+                            )
+                        ],
+                        (
+                            [],
+                            [
+                                For(
+                                    Id("x"),
+                                    IntLiteral(0),
+                                    BinaryOp(
+                                        "<",
+                                        Id("x"),
+                                        IntLiteral(5)
+                                    ),
+                                    IntLiteral(2),
+                                    (
+                                        [
+                                            VarDecl(
+                                                Id("abc"),
+                                                [2],
+                                                ArrayLiteral(
+                                                    [
+                                                        IntLiteral(1),
+                                                        IntLiteral(2)
+                                                    ]
+                                                )
+                                            )
+                                        ],
+                                        [
+                                            Assign(
+                                                Id("abc"),
+                                                ArrayCell(
+                                                    ArrayLiteral(
+                                                        [
+                                                            IntLiteral(0),
+                                                            IntLiteral(2),
+                                                            IntLiteral(3)
+                                                        ]
+                                                    ),
+                                                    [
+                                                        IntLiteral(1)
+                                                    ]
+                                                )
+                                            )
+                                        ]
+                                    )
+                                )
+                            ]
+                        )
+                    )
+                ]
+            )
+        self.assertTrue(TestAST.checkASTGen(
+            input, 
+            expect, 
+            378))
+
+    def test_79(self):
+        input = r"""
+        Function: foo
+        Parameter: x, y, z[1]
+            Body:
+                ** Test 4 For Statement **
+                For (x = 0, x < 5, 2) Do
+                    Var: abc[2] = {0x1, 0x2};
+                    abc = {0,2,3}[1];
+                    ** Comment 4 **
+                EndFor.
+            EndBody."""
+        expect = Program(
+                [
+                    FuncDecl(
+                        Id("foo"),
+                        [
+                            VarDecl(
+                                Id("x"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("y"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("z"),
+                                [1],
+                                None
+                            )
+                        ],
+                        (
+                            [],
+                            [
+                                For(
+                                    Id("x"),
+                                    IntLiteral(0),
+                                    BinaryOp(
+                                        "<",
+                                        Id("x"),
+                                        IntLiteral(5)
+                                    ),
+                                    IntLiteral(2),
+                                    (
+                                        [
+                                            VarDecl(
+                                                Id("abc"),
+                                                [2],
+                                                ArrayLiteral(
+                                                    [
+                                                        IntLiteral(1),
+                                                        IntLiteral(2)
+                                                    ]
+                                                )
+                                            )
+                                        ],
+                                        [
+                                            Assign(
+                                                Id("abc"),
+                                                ArrayCell(
+                                                    ArrayLiteral(
+                                                        [
+                                                            IntLiteral(0),
+                                                            IntLiteral(2),
+                                                            IntLiteral(3)
+                                                        ]
+                                                    ),
+                                                    [
+                                                        IntLiteral(1)
+                                                    ]
+                                                )
+                                            )
+                                        ]
+                                    )
+                                )
+                            ]
+                        )
+                    )
+                ]
+            )
+        self.assertTrue(TestAST.checkASTGen(
+            input, 
+            expect, 
+            379))
+
+    def test_80(self):
+        input = r"""
+        Function: foo
+        Parameter: x, y, z[1]
+            Body:
+                ** Test 5 For Statement **
+                For (x = 0, x < 5, 2) Do
+                    Var: abc[2] = {0x1, 0x2};
+                    abc = {0,2,3}[1];
+                    ** Comment 4 **
+                    For (i = 0, i, i) Do
+                    EndFor.
+                EndFor.
+            EndBody."""
+        expect = Program(
+                [
+                    FuncDecl(
+                        Id("foo"),
+                        [
+                            VarDecl(
+                                Id("x"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("y"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("z"),
+                                [1],
+                                None
+                            )
+                        ],
+                        (
+                            [],
+                            [
+                                For(
+                                    Id("x"),
+                                    IntLiteral(0),
+                                    BinaryOp(
+                                        "<",
+                                        Id("x"),
+                                        IntLiteral(5)
+                                    ),
+                                    IntLiteral(2),
+                                    (
+                                        [
+                                            VarDecl(
+                                                Id("abc"),
+                                                [2],
+                                                ArrayLiteral(
+                                                    [
+                                                        IntLiteral(1),
+                                                        IntLiteral(2)
+                                                    ]
+                                                )
+                                            )
+                                        ],
+                                        [
+                                            Assign(
+                                                Id("abc"),
+                                                ArrayCell(
+                                                    ArrayLiteral(
+                                                        [
+                                                            IntLiteral(0),
+                                                            IntLiteral(2),
+                                                            IntLiteral(3)
+                                                        ]
+                                                    ),
+                                                    [
+                                                        IntLiteral(1)
+                                                    ]
+                                                )
+                                            ),
+                                            For(
+                                                Id("i"),
+                                                IntLiteral(0),
+                                                Id("i"),
+                                                Id("i"),
+                                                (
+                                                    [],
+                                                    []
+                                                )
+                                            )
+                                        ]
+                                    )
+                                )
+                            ]
+                        )
+                    )
+                ]
+            )
+        self.assertTrue(TestAST.checkASTGen(
+            input, 
+            expect, 
+            380))
+
+    def test_81(self):
+        input = r"""
+        Function: foo
+        Parameter: x, y, z[1]
+            Body:
+                ** Test 6 For Statement **
+                For (x = 0, x < 5, 2) Do
+                    Var: abc[2] = {0x1, 0x2};
+                    abc = {0,2,3}[1];
+                    ** Comment 4 **
+                    For (i = 0, i, i) Do
+                        ** Comment 5 **
+                    EndFor.
+                EndFor.
+            EndBody."""
+        expect = Program(
+                [
+                    FuncDecl(
+                        Id("foo"),
+                        [
+                            VarDecl(
+                                Id("x"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("y"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("z"),
+                                [1],
+                                None
+                            )
+                        ],
+                        (
+                            [],
+                            [
+                                For(
+                                    Id("x"),
+                                    IntLiteral(0),
+                                    BinaryOp(
+                                        "<",
+                                        Id("x"),
+                                        IntLiteral(5)
+                                    ),
+                                    IntLiteral(2),
+                                    (
+                                        [
+                                            VarDecl(
+                                                Id("abc"),
+                                                [2],
+                                                ArrayLiteral(
+                                                    [
+                                                        IntLiteral(1),
+                                                        IntLiteral(2)
+                                                    ]
+                                                )
+                                            )
+                                        ],
+                                        [
+                                            Assign(
+                                                Id("abc"),
+                                                ArrayCell(
+                                                    ArrayLiteral(
+                                                        [
+                                                            IntLiteral(0),
+                                                            IntLiteral(2),
+                                                            IntLiteral(3)
+                                                        ]
+                                                    ),
+                                                    [
+                                                        IntLiteral(1)
+                                                    ]
+                                                )
+                                            ),
+                                            For(
+                                                Id("i"),
+                                                IntLiteral(0),
+                                                Id("i"),
+                                                Id("i"),
+                                                (
+                                                    [],
+                                                    []
+                                                )
+                                            )
+                                        ]
+                                    )
+                                )
+                            ]
+                        )
+                    )
+                ]
+            )
+        self.assertTrue(TestAST.checkASTGen(
+            input, 
+            expect, 
+            381))
+
+    def test_82(self):
+        input = r"""
+        Function: foo
+        Parameter: x, y, z[1]
+            Body:
+                ** Test 6 For Statement **
+                For (x = 0, x < 5, 2) Do
+                    Var: abc[2] = {0x1, 0x2};
+                    abc = {0,2,3}[1];
+                    ** Comment 4 **
+                    For (i = 0, i, i) Do
+                        ** Comment 5 **
+                        abc = foo();
+                    EndFor.
+                EndFor.
+            EndBody."""
+        expect = Program(
+                [
+                    FuncDecl(
+                        Id("foo"),
+                        [
+                            VarDecl(
+                                Id("x"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("y"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("z"),
+                                [1],
+                                None
+                            )
+                        ],
+                        (
+                            [],
+                            [
+                                For(
+                                    Id("x"),
+                                    IntLiteral(0),
+                                    BinaryOp(
+                                        "<",
+                                        Id("x"),
+                                        IntLiteral(5)
+                                    ),
+                                    IntLiteral(2),
+                                    (
+                                        [
+                                            VarDecl(
+                                                Id("abc"),
+                                                [2],
+                                                ArrayLiteral(
+                                                    [
+                                                        IntLiteral(1),
+                                                        IntLiteral(2)
+                                                    ]
+                                                )
+                                            )
+                                        ],
+                                        [
+                                            Assign(
+                                                Id("abc"),
+                                                ArrayCell(
+                                                    ArrayLiteral(
+                                                        [
+                                                            IntLiteral(0),
+                                                            IntLiteral(2),
+                                                            IntLiteral(3)
+                                                        ]
+                                                    ),
+                                                    [
+                                                        IntLiteral(1)
+                                                    ]
+                                                )
+                                            ),
+                                            For(
+                                                Id("i"),
+                                                IntLiteral(0),
+                                                Id("i"),
+                                                Id("i"),
+                                                (
+                                                    [],
+                                                    [
+                                                        Assign(
+                                                            Id("abc"),
+                                                            CallExpr(
+                                                                Id("foo"),
+                                                                []
+                                                            )
+                                                        )
+                                                    ]
+                                                )
+                                            )
+                                        ]
+                                    )
+                                )
+                            ]
+                        )
+                    )
+                ]
+            )
+        self.assertTrue(TestAST.checkASTGen(
+            input, 
+            expect, 
+            382))
+
+    def test_83(self):
+        input = r"""
+        Function: foo
+        Parameter: x, y, z[1]
+            Body:
+                While (True) Do
+                    ** Test 1 While Statement **
+                EndWhile.
+            EndBody."""
+        expect = Program(
+                [
+                    FuncDecl(
+                        Id("foo"),
+                        [
+                            VarDecl(
+                                Id("x"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("y"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("z"),
+                                [1],
+                                None
+                            )
+                        ],
+                        (
+                            [],
+                            [
+                                While(
+                                    BooleanLiteral(True),
+                                    (
+                                        [],
+                                        []
+                                    )
+                                )
+                            ]
+                        )
+                    )
+                ]
+            )
+        self.assertTrue(TestAST.checkASTGen(
+            input, 
+            expect, 
+            383))
+
+    def test_84(self):
+        input = r"""
+        Function: foo
+        Parameter: x, y, z[1]
+            Body:
+                While (x < y + z[1]) Do
+                    ** Test 2 While Statement **
+                EndWhile.
+            EndBody."""
+        expect = Program(
+                [
+                    FuncDecl(
+                        Id("foo"),
+                        [
+                            VarDecl(
+                                Id("x"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("y"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("z"),
+                                [1],
+                                None
+                            )
+                        ],
+                        (
+                            [],
+                            [
+                                While(
+                                    BinaryOp(
+                                        "<",
+                                        Id("x"),
+                                        BinaryOp(
+                                            "+",
+                                            Id("y"),
+                                            ArrayCell(
+                                                Id("z"),
+                                                [
+                                                    IntLiteral(1)
+                                                ]
+                                            )
+                                        )
+                                    ),
+                                    (
+                                        [],
+                                        []
+                                    )
+                                )
+                            ]
+                        )
+                    )
+                ]
+            )
+        self.assertTrue(TestAST.checkASTGen(
+            input, 
+            expect, 
+            384))
+
+    def test_85(self):
+        input = r"""
+        Function: foo
+        Parameter: x, y, z[1]
+            Body:
+                While (x < y + z[1]) Do
+                    ** Test 3 While Statement **
+                    Var: e = 0xA;
+                EndWhile.
+            EndBody."""
+        expect = Program(
+                [
+                    FuncDecl(
+                        Id("foo"),
+                        [
+                            VarDecl(
+                                Id("x"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("y"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("z"),
+                                [1],
+                                None
+                            )
+                        ],
+                        (
+                            [],
+                            [
+                                While(
+                                    BinaryOp(
+                                        "<",
+                                        Id("x"),
+                                        BinaryOp(
+                                            "+",
+                                            Id("y"),
+                                            ArrayCell(
+                                                Id("z"),
+                                                [
+                                                    IntLiteral(1)
+                                                ]
+                                            )
+                                        )
+                                    ),
+                                    (
+                                        [
+                                            VarDecl(
+                                                Id("e"),
+                                                [],
+                                                IntLiteral(10)
+                                            )
+                                        ],
+                                        []
+                                    )
+                                )
+                            ]
+                        )
+                    )
+                ]
+            )
+        self.assertTrue(TestAST.checkASTGen(
+            input, 
+            expect, 
+            385))
+
+    def test_86(self):
+        input = r"""
+        Function: foo
+        Parameter: x, y, z[1]
+            Body:
+                While (x < y + z[1]) Do
+                    ** Test 4 While Statement **
+                    Var: e = 0xA;
+                    While True Do
+                    EndWhile.
+                EndWhile.
+            EndBody."""
+        expect = Program(
+                [
+                    FuncDecl(
+                        Id("foo"),
+                        [
+                            VarDecl(
+                                Id("x"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("y"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("z"),
+                                [1],
+                                None
+                            )
+                        ],
+                        (
+                            [],
+                            [
+                                While(
+                                    BinaryOp(
+                                        "<",
+                                        Id("x"),
+                                        BinaryOp(
+                                            "+",
+                                            Id("y"),
+                                            ArrayCell(
+                                                Id("z"),
+                                                [
+                                                    IntLiteral(1)
+                                                ]
+                                            )
+                                        )
+                                    ),
+                                    (
+                                        [
+                                            VarDecl(
+                                                Id("e"),
+                                                [],
+                                                IntLiteral(10)
+                                            )
+                                        ],
+                                        [
+                                            While(
+                                                BooleanLiteral(True),
+                                                (
+                                                    [],
+                                                    []
+                                                )
+                                            )
+                                        ]
+                                    )
+                                )
+                            ]
+                        )
+                    )
+                ]
+            )
+        self.assertTrue(TestAST.checkASTGen(
+            input, 
+            expect, 
+            386))
+
+    def test_87(self):
+        input = r"""
+        Function: foo
+        Parameter: x, y, z[1]
+            Body:
+                While (x < y + z[1]) Do
+                    ** Test 5 While Statement **
+                    Var: e = 0xA;
+                    While True Do
+                        While True Do
+                        EndWhile.
+                    EndWhile.
+                EndWhile.
+            EndBody."""
+        expect = Program(
+                [
+                    FuncDecl(
+                        Id("foo"),
+                        [
+                            VarDecl(
+                                Id("x"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("y"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("z"),
+                                [1],
+                                None
+                            )
+                        ],
+                        (
+                            [],
+                            [
+                                While(
+                                    BinaryOp(
+                                        "<",
+                                        Id("x"),
+                                        BinaryOp(
+                                            "+",
+                                            Id("y"),
+                                            ArrayCell(
+                                                Id("z"),
+                                                [
+                                                    IntLiteral(1)
+                                                ]
+                                            )
+                                        )
+                                    ),
+                                    (
+                                        [
+                                            VarDecl(
+                                                Id("e"),
+                                                [],
+                                                IntLiteral(10)
+                                            )
+                                        ],
+                                        [
+                                            While(
+                                                BooleanLiteral(True),
+                                                (
+                                                    [],
+                                                    [
+                                                        While(
+                                                            BooleanLiteral(True),
+                                                            (
+                                                                [],
+                                                                []
+                                                            )
+                                                        )
+                                                    ]
+                                                )
+                                            )
+                                        ]
+                                    )
+                                )
+                            ]
+                        )
+                    )
+                ]
+            )
+        self.assertTrue(TestAST.checkASTGen(
+            input, 
+            expect, 
+            387))
+        
+    def test_88(self):
+        input = r"""
+        Function: foo
+        Parameter: x, y, z[1]
+            Body:
+                While (x < y + z[1]) Do
+                    ** Test 5 While Statement **
+                    Var: e = 0xA;
+                    While True Do
+                        While True Do
+                            While True Do
+                            EndWhile.
+                        EndWhile.
+                    EndWhile.
+                EndWhile.
+            EndBody."""
+        expect = Program(
+                [
+                    FuncDecl(
+                        Id("foo"),
+                        [
+                            VarDecl(
+                                Id("x"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("y"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("z"),
+                                [1],
+                                None
+                            )
+                        ],
+                        (
+                            [],
+                            [
+                                While(
+                                    BinaryOp(
+                                        "<",
+                                        Id("x"),
+                                        BinaryOp(
+                                            "+",
+                                            Id("y"),
+                                            ArrayCell(
+                                                Id("z"),
+                                                [
+                                                    IntLiteral(1)
+                                                ]
+                                            )
+                                        )
+                                    ),
+                                    (
+                                        [
+                                            VarDecl(
+                                                Id("e"),
+                                                [],
+                                                IntLiteral(10)
+                                            )
+                                        ],
+                                        [
+                                            While(
+                                                BooleanLiteral(True),
+                                                (
+                                                    [],
+                                                    [
+                                                        While(
+                                                            BooleanLiteral(True),
+                                                            (
+                                                                [],
+                                                                [
+                                                                    While(
+                                                                        BooleanLiteral(True),
+                                                                        (
+                                                                            [],
+                                                                            []
+                                                                        )
+                                                                    )
+                                                                ]
+                                                            )
+                                                        )
+                                                    ]
+                                                )
+                                            )
+                                        ]
+                                    )
+                                )
+                            ]
+                        )
+                    )
+                ]
+            )
+        self.assertTrue(TestAST.checkASTGen(
+            input, 
+            expect, 
+            388))
+
+    def test_89(self):
+        input = r"""
+        Function: foo
+        Parameter: x, y, z[1]
+            Body:
+                While (x < y + z[1]) Do
+                    ** Test 5 While Statement **
+                    Var: e = 0xA;
+                    While True Do
+                        While True Do
+                            While True Do
+                                While True Do
+                                    print("a");
+                                EndWhile.
+                            EndWhile.
+                        EndWhile.
+                    EndWhile.
+                EndWhile.
+            EndBody."""
+        expect = Program(
+                [
+                    FuncDecl(
+                        Id("foo"),
+                        [
+                            VarDecl(
+                                Id("x"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("y"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("z"),
+                                [1],
+                                None
+                            )
+                        ],
+                        (
+                            [],
+                            [
+                                While(
+                                    BinaryOp(
+                                        "<",
+                                        Id("x"),
+                                        BinaryOp(
+                                            "+",
+                                            Id("y"),
+                                            ArrayCell(
+                                                Id("z"),
+                                                [
+                                                    IntLiteral(1)
+                                                ]
+                                            )
+                                        )
+                                    ),
+                                    (
+                                        [
+                                            VarDecl(
+                                                Id("e"),
+                                                [],
+                                                IntLiteral(10)
+                                            )
+                                        ],
+                                        [
+                                            While(
+                                                BooleanLiteral(True),
+                                                (
+                                                    [],
+                                                    [
+                                                        While(
+                                                            BooleanLiteral(True),
+                                                            (
+                                                                [],
+                                                                [
+                                                                    While(
+                                                                        BooleanLiteral(True),
+                                                                        (
+                                                                            [],
+                                                                            [
+                                                                                While(
+                                                                                    BooleanLiteral(True),
+                                                                                    (
+                                                                                        [],
+                                                                                        [
+                                                                                            CallStmt(
+                                                                                                Id("print"),
+                                                                                                [
+                                                                                                    StringLiteral("a")
+                                                                                                ]
+                                                                                            )
+                                                                                        ]
+                                                                                    )
+                                                                                )
+                                                                            ]
+                                                                        )
+                                                                    )
+                                                                ]
+                                                            )
+                                                        )
+                                                    ]
+                                                )
+                                            )
+                                        ]
+                                    )
+                                )
+                            ]
+                        )
+                    )
+                ]
+            )
+        self.assertTrue(TestAST.checkASTGen(
+            input, 
+            expect, 
+            389))
+
+    def test_90(self):
+        input = r"""
+        Function: foo
+        Parameter: x, y, z[1]
+            Body:
+                While (x < y + z[1]) Do
+                    ** Test 6 While Statement **
+                    Var: e = 0xA;
+                    While True Do
+                        While True Do
+                            While True Do
+                                While True Do
+                                    print("a");
+                                    Return(False);
+                                EndWhile.
+                            EndWhile.
+                        EndWhile.
+                    EndWhile.
+                EndWhile.
+            EndBody."""
+        expect = Program(
+                [
+                    FuncDecl(
+                        Id("foo"),
+                        [
+                            VarDecl(
+                                Id("x"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("y"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("z"),
+                                [1],
+                                None
+                            )
+                        ],
+                        (
+                            [],
+                            [
+                                While(
+                                    BinaryOp(
+                                        "<",
+                                        Id("x"),
+                                        BinaryOp(
+                                            "+",
+                                            Id("y"),
+                                            ArrayCell(
+                                                Id("z"),
+                                                [
+                                                    IntLiteral(1)
+                                                ]
+                                            )
+                                        )
+                                    ),
+                                    (
+                                        [
+                                            VarDecl(
+                                                Id("e"),
+                                                [],
+                                                IntLiteral(10)
+                                            )
+                                        ],
+                                        [
+                                            While(
+                                                BooleanLiteral(True),
+                                                (
+                                                    [],
+                                                    [
+                                                        While(
+                                                            BooleanLiteral(True),
+                                                            (
+                                                                [],
+                                                                [
+                                                                    While(
+                                                                        BooleanLiteral(True),
+                                                                        (
+                                                                            [],
+                                                                            [
+                                                                                While(
+                                                                                    BooleanLiteral(True),
+                                                                                    (
+                                                                                        [],
+                                                                                        [
+                                                                                            CallStmt(
+                                                                                                Id("print"),
+                                                                                                [
+                                                                                                    StringLiteral("a")
+                                                                                                ]
+                                                                                            ),
+                                                                                            Return(
+                                                                                                BooleanLiteral(False)
+                                                                                            )
+                                                                                        ]
+                                                                                    )
+                                                                                )
+                                                                            ]
+                                                                        )
+                                                                    )
+                                                                ]
+                                                            )
+                                                        )
+                                                    ]
+                                                )
+                                            )
+                                        ]
+                                    )
+                                )
+                            ]
+                        )
+                    )
+                ]
+            )
+        self.assertTrue(TestAST.checkASTGen(
+            input, 
+            expect, 
+            390))
+
+    def test_91(self):
+        input = r"""
+        Function: foo
+        Parameter: x, y, z[1]
+            Body:
+                Do
+                    ** Test 1 Dowhile Statement **
+                While True EndDo.
+            EndBody."""
+        expect = Program(
+                [
+                    FuncDecl(
+                        Id("foo"),
+                        [
+                            VarDecl(
+                                Id("x"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("y"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("z"),
+                                [1],
+                                None
+                            )
+                        ],
+                        (
+                            [],
+                            [
+                                Dowhile(
+                                    (
+                                        [],
+                                        []
+                                    ),
+                                    BooleanLiteral(True)
+                                )
+                            ]
+                        )
+                    )
+                ]
+            )
+        self.assertTrue(TestAST.checkASTGen(
+            input, 
+            expect, 
+            391))
+
+    def test_92(self):
+        input = r"""
+        Function: foo
+        Parameter: x, y, z[1]
+            Body:
+                Do
+                    ** Test 1 Dowhile Statement **
+                    Do
+                    While True EndDo.
+                While True EndDo.
+            EndBody."""
+        expect = Program(
+                [
+                    FuncDecl(
+                        Id("foo"),
+                        [
+                            VarDecl(
+                                Id("x"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("y"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("z"),
+                                [1],
+                                None
+                            )
+                        ],
+                        (
+                            [],
+                            [
+                                Dowhile(
+                                    (
+                                        [],
+                                        [
+                                            Dowhile(
+                                                (
+                                                    [],
+                                                    []
+                                                ),
+                                                BooleanLiteral(True)
+                                            )
+                                        ]
+                                    ),
+                                    BooleanLiteral(True)
+                                )
+                            ]
+                        )
+                    )
+                ]
+            )
+        self.assertTrue(TestAST.checkASTGen(
+            input, 
+            expect, 
+            392))
+
+    def test_93(self):
+        input = r"""
+        Function: foo
+        Parameter: x, y, z[1]
+            Body:
+                Do
+                    ** Test 2 Dowhile Statement **
+                    Do
+                        Do
+                        While True EndDo.
+                    While True EndDo.
+                While True EndDo.
+            EndBody."""
+        expect = Program(
+                [
+                    FuncDecl(
+                        Id("foo"),
+                        [
+                            VarDecl(
+                                Id("x"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("y"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("z"),
+                                [1],
+                                None
+                            )
+                        ],
+                        (
+                            [],
+                            [
+                                Dowhile(
+                                    (
+                                        [],
+                                        [
+                                            Dowhile(
+                                                (
+                                                    [],
+                                                    [
+                                                        Dowhile(
+                                                            (
+                                                                [],
+                                                                []
+                                                            ),
+                                                            BooleanLiteral(True)
+                                                        )
+                                                    ]
+                                                ),
+                                                BooleanLiteral(True)
+                                            )
+                                        ]
+                                    ),
+                                    BooleanLiteral(True)
+                                )
+                            ]
+                        )
+                    )
+                ]
+            )
+        self.assertTrue(TestAST.checkASTGen(
+            input, 
+            expect, 
+            393))
+
+    def test_94(self):
+        input = r"""
+        Function: foo
+        Parameter: x, y, z[1]
+            Body:
+                Do
+                    ** Test 3 Dowhile Statement **
+                    Do
+                        Do
+                            Do
+                            While True EndDo.
+                        While True EndDo.
+                    While True EndDo.
+                While True EndDo.
+            EndBody."""
+        expect = Program(
+                [
+                    FuncDecl(
+                        Id("foo"),
+                        [
+                            VarDecl(
+                                Id("x"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("y"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("z"),
+                                [1],
+                                None
+                            )
+                        ],
+                        (
+                            [],
+                            [
+                                Dowhile(
+                                    (
+                                        [],
+                                        [
+                                            Dowhile(
+                                                (
+                                                    [],
+                                                    [
+                                                        Dowhile(
+                                                            (
+                                                                [],
+                                                                [
+                                                                    Dowhile(
+                                                                        (
+                                                                            [],
+                                                                            []
+                                                                        ),
+                                                                        BooleanLiteral(True)
+                                                                    )
+                                                                ]
+                                                            ),
+                                                            BooleanLiteral(True)
+                                                        )
+                                                    ]
+                                                ),
+                                                BooleanLiteral(True)
+                                            )
+                                        ]
+                                    ),
+                                    BooleanLiteral(True)
+                                )
+                            ]
+                        )
+                    )
+                ]
+            )
+        self.assertTrue(TestAST.checkASTGen(
+            input, 
+            expect, 
+            394))
+
+    def test_95(self):
+        input = r"""
+        Function: foo
+        Parameter: x, y, z[1]
+            Body:
+                Do
+                    ** Test 3 Dowhile Statement **
+                    Do
+                        Do
+                            Do
+                                While True Do
+                                EndWhile.
+                            While True EndDo.
+                        While True EndDo.
+                    While True EndDo.
+                While True EndDo.
+            EndBody."""
+        expect = Program(
+                [
+                    FuncDecl(
+                        Id("foo"),
+                        [
+                            VarDecl(
+                                Id("x"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("y"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("z"),
+                                [1],
+                                None
+                            )
+                        ],
+                        (
+                            [],
+                            [
+                                Dowhile(
+                                    (
+                                        [],
+                                        [
+                                            Dowhile(
+                                                (
+                                                    [],
+                                                    [
+                                                        Dowhile(
+                                                            (
+                                                                [],
+                                                                [
+                                                                    Dowhile(
+                                                                        (
+                                                                            [],
+                                                                            [
+                                                                                While(
+                                                                                    BooleanLiteral(True),
+                                                                                    (
+                                                                                        [],
+                                                                                        []
+                                                                                    )
+                                                                                )
+                                                                            ]
+                                                                        ),
+                                                                        BooleanLiteral(True)
+                                                                    )
+                                                                ]
+                                                            ),
+                                                            BooleanLiteral(True)
+                                                        )
+                                                    ]
+                                                ),
+                                                BooleanLiteral(True)
+                                            )
+                                        ]
+                                    ),
+                                    BooleanLiteral(True)
+                                )
+                            ]
+                        )
+                    )
+                ]
+            )
+        self.assertTrue(TestAST.checkASTGen(
+            input, 
+            expect, 
+            395))
+
+    def test_96(self):
+        input = r"""
+        Function: foo
+        Parameter: x, y, z[1]
+            Body:
+                Do
+                    ** Test 4 Dowhile Statement **
+                    Do
+                        Do
+                            Do
+                                While True Do
+                                    While True Do
+                                    EndWhile.
+                                EndWhile.
+                            While True EndDo.
+                        While True EndDo.
+                    While True EndDo.
+                While True EndDo.
+            EndBody."""
+        expect = Program(
+                [
+                    FuncDecl(
+                        Id("foo"),
+                        [
+                            VarDecl(
+                                Id("x"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("y"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("z"),
+                                [1],
+                                None
+                            )
+                        ],
+                        (
+                            [],
+                            [
+                                Dowhile(
+                                    (
+                                        [],
+                                        [
+                                            Dowhile(
+                                                (
+                                                    [],
+                                                    [
+                                                        Dowhile(
+                                                            (
+                                                                [],
+                                                                [
+                                                                    Dowhile(
+                                                                        (
+                                                                            [],
+                                                                            [
+                                                                                While(
+                                                                                    BooleanLiteral(True),
+                                                                                    (
+                                                                                        [],
+                                                                                        [
+                                                                                            While(
+                                                                                                BooleanLiteral(True),
+                                                                                                (
+                                                                                                    [],
+                                                                                                    []
+                                                                                                )
+                                                                                            )
+                                                                                        ]
+                                                                                    )
+                                                                                )
+                                                                            ]
+                                                                        ),
+                                                                        BooleanLiteral(True)
+                                                                    )
+                                                                ]
+                                                            ),
+                                                            BooleanLiteral(True)
+                                                        )
+                                                    ]
+                                                ),
+                                                BooleanLiteral(True)
+                                            )
+                                        ]
+                                    ),
+                                    BooleanLiteral(True)
+                                )
+                            ]
+                        )
+                    )
+                ]
+            )
+        self.assertTrue(TestAST.checkASTGen(
+            input, 
+            expect, 
+            396))
+
+    def test_97(self):
+        input = r"""
+        Function: foo
+        Parameter: x, y, z[1]
+            Body:
+                Do
+                    ** Test 4 Dowhile Statement **
+                    Do
+                        Do
+                            Do
+                                While True Do
+                                    While True Do
+                                        If True Then
+                                        EndIf.
+                                    EndWhile.
+                                EndWhile.
+                            While True EndDo.
+                        While True EndDo.
+                    While True EndDo.
+                While True EndDo.
+            EndBody."""
+        expect = Program(
+                [
+                    FuncDecl(
+                        Id("foo"),
+                        [
+                            VarDecl(
+                                Id("x"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("y"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("z"),
+                                [1],
+                                None
+                            )
+                        ],
+                        (
+                            [],
+                            [
+                                Dowhile(
+                                    (
+                                        [],
+                                        [
+                                            Dowhile(
+                                                (
+                                                    [],
+                                                    [
+                                                        Dowhile(
+                                                            (
+                                                                [],
+                                                                [
+                                                                    Dowhile(
+                                                                        (
+                                                                            [],
+                                                                            [
+                                                                                While(
+                                                                                    BooleanLiteral(True),
+                                                                                    (
+                                                                                        [],
+                                                                                        [
+                                                                                            While(
+                                                                                                BooleanLiteral(True),
+                                                                                                (
+                                                                                                    [],
+                                                                                                    [
+                                                                                                        If(
+                                                                                                            [
+                                                                                                                (
+                                                                                                                    BooleanLiteral(True),
+                                                                                                                    [],
+                                                                                                                    []
+                                                                                                                )
+                                                                                                            ],
+                                                                                                            (
+                                                                                                                [],
+                                                                                                                []
+                                                                                                            )
+                                                                                                        )
+                                                                                                    ]
+                                                                                                )
+                                                                                            )
+                                                                                        ]
+                                                                                    )
+                                                                                )
+                                                                            ]
+                                                                        ),
+                                                                        BooleanLiteral(True)
+                                                                    )
+                                                                ]
+                                                            ),
+                                                            BooleanLiteral(True)
+                                                        )
+                                                    ]
+                                                ),
+                                                BooleanLiteral(True)
+                                            )
+                                        ]
+                                    ),
+                                    BooleanLiteral(True)
+                                )
+                            ]
+                        )
+                    )
+                ]
+            )
+        self.assertTrue(TestAST.checkASTGen(
+            input, 
+            expect, 
+            397))
+
+    def test_98(self):
+        input = r"""
+        Function: foo
+        Parameter: x, y, z[1]
+            Body:
+                Do
+                    ** Test 4 Dowhile Statement **
+                    Do
+                        Do
+                            Do
+                                While True Do
+                                    While True Do
+                                        If True Then
+                                        Else
+                                            For(i = 0,i < 10, 1) Do
+                                            EndFor.
+                                        EndIf.
+                                    EndWhile.
+                                EndWhile.
+                            While True EndDo.
+                        While True EndDo.
+                    While True EndDo.
+                While True EndDo.
+            EndBody."""
+        expect = Program(
+                [
+                    FuncDecl(
+                        Id("foo"),
+                        [
+                            VarDecl(
+                                Id("x"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("y"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("z"),
+                                [1],
+                                None
+                            )
+                        ],
+                        (
+                            [],
+                            [
+                                Dowhile(
+                                    (
+                                        [],
+                                        [
+                                            Dowhile(
+                                                (
+                                                    [],
+                                                    [
+                                                        Dowhile(
+                                                            (
+                                                                [],
+                                                                [
+                                                                    Dowhile(
+                                                                        (
+                                                                            [],
+                                                                            [
+                                                                                While(
+                                                                                    BooleanLiteral(True),
+                                                                                    (
+                                                                                        [],
+                                                                                        [
+                                                                                            While(
+                                                                                                BooleanLiteral(True),
+                                                                                                (
+                                                                                                    [],
+                                                                                                    [
+                                                                                                        If(
+                                                                                                            [
+                                                                                                                (
+                                                                                                                    BooleanLiteral(True),
+                                                                                                                    [],
+                                                                                                                    []
+                                                                                                                )
+                                                                                                            ],
+                                                                                                            (
+                                                                                                                [],
+                                                                                                                [
+                                                                                                                    For(
+                                                                                                                        Id("i"),
+                                                                                                                        IntLiteral(0),
+                                                                                                                        BinaryOp(
+                                                                                                                            "<",
+                                                                                                                            Id("i"),
+                                                                                                                            IntLiteral(10)
+                                                                                                                        ),
+                                                                                                                        IntLiteral(1),
+                                                                                                                        (
+                                                                                                                            [],
+                                                                                                                            []
+                                                                                                                        )
+                                                                                                                    )
+                                                                                                                ]
+                                                                                                            )
+                                                                                                        )
+                                                                                                    ]
+                                                                                                )
+                                                                                            )
+                                                                                        ]
+                                                                                    )
+                                                                                )
+                                                                            ]
+                                                                        ),
+                                                                        BooleanLiteral(True)
+                                                                    )
+                                                                ]
+                                                            ),
+                                                            BooleanLiteral(True)
+                                                        )
+                                                    ]
+                                                ),
+                                                BooleanLiteral(True)
+                                            )
+                                        ]
+                                    ),
+                                    BooleanLiteral(True)
+                                )
+                            ]
+                        )
+                    )
+                ]
+            )
+        self.assertTrue(TestAST.checkASTGen(
+            input, 
+            expect, 
+            398))
+
+    def test_99(self):
+        input = r"""
+        Function: foo
+        Parameter: x, y, z[1]
+            Body:
+                Do
+                    ** Test 4 Dowhile Statement **
+                    Do
+                        Do
+                            Do
+                                While True Do
+                                    While True Do
+                                        If True Then
+                                        Else
+                                            For(i = 0,i < 10, 1) Do
+                                                print("Successful");
+                                            EndFor.
+                                        EndIf.
+                                    EndWhile.
+                                EndWhile.
+                            While True EndDo.
+                        While True EndDo.
+                    While True EndDo.
+                While True EndDo.
+            EndBody."""
+        expect = Program(
+                [
+                    FuncDecl(
+                        Id("foo"),
+                        [
+                            VarDecl(
+                                Id("x"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("y"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("z"),
+                                [1],
+                                None
+                            )
+                        ],
+                        (
+                            [],
+                            [
+                                Dowhile(
+                                    (
+                                        [],
+                                        [
+                                            Dowhile(
+                                                (
+                                                    [],
+                                                    [
+                                                        Dowhile(
+                                                            (
+                                                                [],
+                                                                [
+                                                                    Dowhile(
+                                                                        (
+                                                                            [],
+                                                                            [
+                                                                                While(
+                                                                                    BooleanLiteral(True),
+                                                                                    (
+                                                                                        [],
+                                                                                        [
+                                                                                            While(
+                                                                                                BooleanLiteral(True),
+                                                                                                (
+                                                                                                    [],
+                                                                                                    [
+                                                                                                        If(
+                                                                                                            [
+                                                                                                                (
+                                                                                                                    BooleanLiteral(True),
+                                                                                                                    [],
+                                                                                                                    []
+                                                                                                                )
+                                                                                                            ],
+                                                                                                            (
+                                                                                                                [],
+                                                                                                                [
+                                                                                                                    For(
+                                                                                                                        Id("i"),
+                                                                                                                        IntLiteral(0),
+                                                                                                                        BinaryOp(
+                                                                                                                            "<",
+                                                                                                                            Id("i"),
+                                                                                                                            IntLiteral(10)
+                                                                                                                        ),
+                                                                                                                        IntLiteral(1),
+                                                                                                                        (
+                                                                                                                            [],
+                                                                                                                            [
+                                                                                                                                CallStmt(
+                                                                                                                                    Id("print"),
+                                                                                                                                    [
+                                                                                                                                        StringLiteral("Successful")
+                                                                                                                                    ]
+                                                                                                                                )
+                                                                                                                            ]
+                                                                                                                        )
+                                                                                                                    )
+                                                                                                                ]
+                                                                                                            )
+                                                                                                        )
+                                                                                                    ]
+                                                                                                )
+                                                                                            )
+                                                                                        ]
+                                                                                    )
+                                                                                )
+                                                                            ]
+                                                                        ),
+                                                                        BooleanLiteral(True)
+                                                                    )
+                                                                ]
+                                                            ),
+                                                            BooleanLiteral(True)
+                                                        )
+                                                    ]
+                                                ),
+                                                BooleanLiteral(True)
+                                            )
+                                        ]
+                                    ),
+                                    BooleanLiteral(True)
+                                )
+                            ]
+                        )
+                    )
+                ]
+            )
+        self.assertTrue(TestAST.checkASTGen(
+            input, 
+            expect, 
+            399))
