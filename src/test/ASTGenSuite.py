@@ -2,7 +2,7 @@ import unittest
 from TestUtils import TestAST
 from AST import *
 
-from main.bkit.utils.AST import ArrayCell, ArrayLiteral, CallExpr, IntLiteral, StringLiteral, VarDecl
+from main.bkit.utils.AST import ArrayCell, ArrayLiteral, CallExpr, CallStmt, IntLiteral, StringLiteral, VarDecl
 
 class ASTGenSuite(unittest.TestCase):
     def test_0(self):
@@ -55,12 +55,38 @@ class ASTGenSuite(unittest.TestCase):
 
     def test_8(self):
         input = """Var:x[1] = 1.2;"""
-        expect = Program([VarDecl(Id("x"),[1],FloatLiteral(1.2))])
+        expect = Program(
+            [
+                VarDecl(
+                    Id("x"),
+                    [1],
+                    FloatLiteral(1.2)
+                )
+            ]
+        )
         self.assertTrue(TestAST.checkASTGen(input,expect,308))
 
     def test_9(self):
         input = """Var:x[1][2][3], y[1][2] = {1,2};"""
-        expect = Program([VarDecl(Id("x"),[1,2,3],None),VarDecl(Id("y"),[1,2],ArrayLiteral([IntLiteral(1),IntLiteral(2)]))])
+        expect = Program(
+            [
+                VarDecl(
+                    Id("x"),
+                    [1,2,3],
+                    None
+                ),
+                VarDecl(
+                    Id("y"),
+                    [1,2],
+                    ArrayLiteral(
+                        [
+                            IntLiteral(1),
+                            IntLiteral(2)
+                        ]
+                    )
+                )
+            ]
+        )
         self.assertTrue(TestAST.checkASTGen(input,expect,309))
 
     def test_10(self):
@@ -3289,4 +3315,78 @@ Var: x = 1;"""
                           ))
                 ]
                 )
-        self.assertTrue(TestAST.checkASTGen(input, expect, 361))
+        self.assertTrue(TestAST.checkASTGen(
+            input, 
+            expect, 
+            361))
+
+    def test_62(self):
+        input = r"""
+        Function: foo
+            Body:
+                foo1();
+                Return foo();
+            EndBody."""
+        expect = Program(
+                [
+                    FuncDecl(
+                        Id("foo"),
+                        [],
+                        (
+                            [],
+                            [
+                                CallStmt(
+                                    Id("foo1"),
+                                    []
+                                ),
+                                Return(
+                                    CallExpr(
+                                        Id("foo"),
+                                        []
+                                    )
+                                )
+                            ]
+                        )
+                    )
+                ]
+            )
+        self.assertTrue(TestAST.checkASTGen(
+            input, 
+            expect, 
+            362))
+
+    def test_63(self):
+        input = r"""
+        Function: foo
+            Body:
+                foo1();
+                Return foo();
+                ** Test comment **
+            EndBody."""
+        expect = Program(
+                [
+                    FuncDecl(
+                        Id("foo"),
+                        [],
+                        (
+                            [],
+                            [
+                                CallStmt(
+                                    Id("foo1"),
+                                    []
+                                ),
+                                Return(
+                                    CallExpr(
+                                        Id("foo"),
+                                        []
+                                    )
+                                )
+                            ]
+                        )
+                    )
+                ]
+            )
+        self.assertTrue(TestAST.checkASTGen(
+            input, 
+            expect, 
+            363))
