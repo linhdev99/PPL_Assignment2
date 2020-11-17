@@ -2,7 +2,7 @@ from BKITVisitor import BKITVisitor
 from BKITParser import BKITParser
 from AST import *
 
-from main.bkit.utils.AST import ArrayCell
+from main.bkit.utils.AST import ArrayCell, IntLiteral
 
 class ASTGeneration(BKITVisitor):
     def visitProgram(self,ctx:BKITParser.ProgramContext):
@@ -63,20 +63,12 @@ class ASTGeneration(BKITVisitor):
 
     def visitIndex_var_int(self,ctx:BKITParser.Index_var_intContext):
         valueBase = ctx.INTLIT().getText()
-        flag = 0
-        for x in valueBase:
-            if (x == "x") or (x == "X"):
-                flag = 1
-                break
-            if (x == "o") or (x == "O"):
-                flag = 2
-                break
-        if flag == 0:
-            return int(valueBase)
-        if flag == 1:
+        if valueBase.count('x',0,len(valueBase)) or valueBase.count('X',0,len(valueBase)):
             return int(valueBase, 16)
-        if flag == 2:
+        elif valueBase.count('o',0,len(valueBase)) or valueBase.count('O',0,len(valueBase)):
             return int(valueBase, 8)
+        else:
+            return int(valueBase)
 
     def visitAll_lit(self,ctx:BKITParser.All_litContext):
         if ctx.int_lit():
@@ -587,20 +579,12 @@ class ASTGeneration(BKITVisitor):
 
     def visitInt_lit(self, ctx:BKITParser.Int_litContext):
         valueBase = ctx.INTLIT().getText()
-        flag = 0
-        for x in valueBase:
-            if (x == "x") or (x == "X"):
-                flag = 1
-                break
-            if (x == "o") or (x == "O"):
-                flag = 2
-                break
-        if flag == 0:
-            return IntLiteral(int(valueBase))
-        if flag == 1:
+        if valueBase.count('x',0,len(valueBase)) or valueBase.count('X',0,len(valueBase)):
             return IntLiteral(int(valueBase, 16))
-        if flag == 2:
+        elif valueBase.count('o',0,len(valueBase)) or valueBase.count('O',0,len(valueBase)):
             return IntLiteral(int(valueBase, 8))
+        else:
+            return IntLiteral(int(valueBase))
 
     def visitFloat_lit(self, ctx:BKITParser.Float_litContext):
         return FloatLiteral(float(ctx.FLOATLIT().getText()))
