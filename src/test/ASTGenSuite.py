@@ -3014,7 +3014,7 @@ Body:
     Else
         ** Comment 2 **
         Return 2;
-    EndIf
+    EndIf.
 EndBody."""
         expect = Program(
             [
@@ -3068,12 +3068,12 @@ Body:
     **
     If checkFoo() == "verify" Then
         ** Comment 1 **
-        Var: x[3] = {1,2,3}
+        Var: x[3] = {1,2,3};
         Return x[0] + x[1] * x[2];
     Else
         ** Comment 2 **
         Return 2;
-    EndIf
+    EndIf.
 EndBody."""
         expect = Program(
             [
@@ -3155,3 +3155,108 @@ EndBody."""
             input,
             expect,
             359))
+
+    def test_60(self):
+        input = """
+Function: main 
+Body:
+    **
+    *Student Name   : Huynh Pham Phuoc Linh
+    *Student ID     : 1710165
+    **
+    If checkFoo() == "verify" Then
+        ** Comment 1 **
+        Var: x[3] = {1,2,3};
+        Return x[0] + x[1] * x[2];
+    Else
+        ** Comment 2 **
+        Return 2;
+    EndIf.
+EndBody.
+Var: x = 1;"""
+        expect = Program(
+            [
+                FuncDecl(
+                    Id("main"),
+                    [],
+                    (
+                        [],
+                        [
+                            If(
+                                [
+                                    (
+                                        BinaryOp(
+                                            "==",
+                                            CallExpr(
+                                                Id("checkFoo"),
+                                                []
+                                            ),
+                                            StringLiteral("verify")
+                                        ),
+                                        [
+                                            VarDecl(
+                                                Id("x"),
+                                                [3],
+                                                ArrayLiteral(
+                                                    [
+                                                        IntLiteral(1),
+                                                        IntLiteral(2),
+                                                        IntLiteral(3)
+                                                    ]
+                                                )
+                                            )
+                                        ],
+                                        [
+                                            Return(
+                                                BinaryOp(
+                                                    "+",
+                                                    ArrayCell(
+                                                        Id("x"),
+                                                        [
+                                                            IntLiteral(0)
+                                                        ]
+                                                    ),
+                                                    BinaryOp(
+                                                        "*",
+                                                        ArrayCell(
+                                                            Id("x"),
+                                                            [
+                                                                IntLiteral(1)
+                                                            ]
+                                                        ),
+                                                        ArrayCell(
+                                                            Id("x"),
+                                                            [
+                                                                IntLiteral(2)
+                                                            ]
+                                                        )
+                                                    )
+                                                )
+                                            )
+                                        ]
+                                    )
+                                ],
+                                (
+                                    [],
+                                    [
+                                        Return(
+                                            IntLiteral(2)
+                                        )
+                                    ]
+                                )
+                            )
+                        ]
+                    )
+                )
+                ,
+                VarDecl(
+                    Id("x"),
+                    [],
+                    IntLiteral(1)
+                )
+            ]
+        )
+        self.assertTrue(TestAST.checkASTGen(
+            input,
+            expect,
+            360))

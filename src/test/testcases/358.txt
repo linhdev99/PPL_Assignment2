@@ -11,5 +11,5 @@ Body:
     Else
         ** Comment 2 **
         Return 2;
-    EndIf
+    EndIf.
 EndBody.
