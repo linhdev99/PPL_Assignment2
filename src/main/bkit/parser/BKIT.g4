@@ -50,7 +50,7 @@ array_lit: LCB (array_lit_cell (COMMA array_lit_cell)*)? RCB;
  * 6 Statements and Control Flow
  */
 //body: stmt_notfunc | stmt_spe;
-body: var_declare | stmt;
+body: var_declare* stmt*;
 stmt: stmt_notfunc | stmt_spe;
 //stmt_decl: var_declare | func_declare;
 stmt_notfunc: if_stmt
@@ -64,7 +64,7 @@ stmt_spe: assign_stmt SEMI
         | return_stmt
         | call_stmt;
 // body declare
-body_declare: BODY COLON body* ENDBODY DOT;
+body_declare: BODY COLON body ENDBODY DOT;
 
 //assign statement
 assign_stmt: ID op_index* EQ exp;
@@ -77,12 +77,12 @@ func_declare: FUNCTION COLON ID parameter_func? body_declare;
 parameter_func: PARAMETER COLON scalar_var_int (COMMA scalar_var_int)*;
 
 // if-elseif-else statement
-if_stmt: IF exp THEN body* elseif_stmt* else_stmt? ENDIF DOT;
-elseif_stmt: ELSEIF exp THEN body*;
-else_stmt: ELSE body*;
+if_stmt: IF exp THEN body elseif_stmt* else_stmt? ENDIF DOT;
+elseif_stmt: ELSEIF exp THEN body;
+else_stmt: ELSE body;
 
 // for statement
-for_stmt: FOR LP ID EQ exp COMMA conditionExpr COMMA updateExpr RP DO body* ENDFOR DOT;
+for_stmt: FOR LP ID EQ exp COMMA conditionExpr COMMA updateExpr RP DO body ENDFOR DOT;
 
 //scalar-variable
 scalar_var: ID index_var*;
@@ -99,10 +99,10 @@ conditionExpr: exp;
 updateExpr: exp;
 
 // while statement
-while_stmt: WHILE exp DO body* ENDWHILE DOT;
+while_stmt: WHILE exp DO body ENDWHILE DOT;
 
 // Do-while statement
-doWhile_stmt: DO body* WHILE exp ENDDO DOT;
+doWhile_stmt: DO body WHILE exp ENDDO DOT;
 
 //Break statement
 break_stmt: BREAK SEMI;

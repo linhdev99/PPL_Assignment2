@@ -104,36 +104,54 @@ class ASTGeneration(BKITVisitor):
         return temp
 
     def visitBody_declare(self,ctx:BKITParser.Body_declareContext):
-        temp_var = []
-        temp_stmt = []
-        for x in ctx.body():
-            temp = self.visitBody(x)
-            if temp[0] == 0:
-                if isinstance(temp[1], list):
-                    temp_var.extend(temp[1])
-                else:
-                    temp_var.append(temp[1])
-            else:
-                if isinstance(temp[1], list):
-                   temp_stmt.extend(temp[1])
-                else:
-                    temp_stmt.append(temp[1])
-        temp = []
-        temp.append(temp_var)
-        temp.append(temp_stmt)
-        return [temp_var, temp_stmt]
+        return self.visitBody(ctx.body())
+        # temp_var = []
+        # temp_stmt = []
+        # for x in ctx.body():
+        #     temp = self.visitBody(x)
+        #     if temp[0] == 0:
+        #         if isinstance(temp[1], list):
+        #             temp_var.extend(temp[1])
+        #         else:
+        #             temp_var.append(temp[1])
+        #     else:
+        #         if isinstance(temp[1], list):
+        #            temp_stmt.extend(temp[1])
+        #         else:
+        #             temp_stmt.append(temp[1])
+        # temp = []
+        # temp.append(temp_var)
+        # temp.append(temp_stmt)
+        # return [temp_var, temp_stmt]
 
     def visitBody(self,ctx:BKITParser.BodyContext):
+        lst_vardecl = []
+        lst_funcdecl = []
         if ctx.var_declare():
-            return [0,self.visitVar_declare(ctx.var_declare())]
-        else:
-            temp = self.visitStmt(ctx.stmt())
-            arr = [1]
-            if isinstance(temp, list):
-                arr.extend(temp if temp else [])
-            else:
-                arr.append(temp)
-            return arr
+            for x in ctx.var_declare():
+                temp_var = self.visitVar_declare(x)
+                if isinstance(temp_var, list):
+                    lst_vardecl.extend(temp_var if temp_var else [])
+                else:
+                    lst_vardecl.append(temp_var)
+        if ctx.stmt():
+            for x in ctx.stmt():
+                temp_stmt = self.visitStmt(x)
+                if isinstance(temp_stmt, list):
+                    lst_funcdecl.extend(temp_stmt if temp_stmt else [])
+                else:
+                    lst_funcdecl.append(temp_stmt)
+        return [lst_vardecl, lst_funcdecl]
+        # if ctx.var_declare():
+        #     return [0,self.visitVar_declare(ctx.var_declare())]
+        # else:
+        #     temp = self.visitStmt(ctx.stmt())
+        #     arr = [1]
+        #     if isinstance(temp, list):
+        #         arr.extend(temp if temp else [])
+        #     else:
+        #         arr.append(temp)
+        #     return arr
 
     def visitStmt(self,ctx:BKITParser.StmtContext):
         if ctx.stmt_notfunc():
@@ -362,20 +380,21 @@ class ASTGeneration(BKITVisitor):
         temp_stmt = []
 
         listIfThenStmt = []
-        for x in ctx.body():
-            temp = self.visitBody(x)
-            if temp[0] == 0:
-                if isinstance(temp[1], list):
-                    temp_var.extend(temp[1])
-                else:
-                    temp_var.append(temp[1])
-            else:
-                if isinstance(temp[1], list):
-                    temp_stmt.extend(temp[1])
-                else:
-                    temp_stmt.append(temp[1])
-        tempBody.append(temp_var)
-        tempBody.append(temp_stmt)
+        # for x in ctx.body():
+        #     temp = self.visitBody(x)
+        #     if temp[0] == 0:
+        #         if isinstance(temp[1], list):
+        #             temp_var.extend(temp[1])
+        #         else:
+        #             temp_var.append(temp[1])
+        #     else:
+        #         if isinstance(temp[1], list):
+        #             temp_stmt.extend(temp[1])
+        #         else:
+        #             temp_stmt.append(temp[1])
+        getLstBody = self.visitBody(ctx.body())
+        tempBody.append(getLstBody[0])
+        tempBody.append(getLstBody[1])
         tupleIfStmt = (tempExpr, tempBody[0], tempBody[1])
         listIfThenStmt.append(tupleIfStmt)
 
@@ -399,40 +418,42 @@ class ASTGeneration(BKITVisitor):
         tempBody = []
         temp_var = []
         temp_stmt = []
-        for x in ctx.body():
-            temp = self.visitBody(x)
-            if temp[0] == 0:
-                if isinstance(temp[1], list):
-                    temp_var.extend(temp[1])
-                else:
-                    temp_var.append(temp[1])
-            else:
-                if isinstance(temp[1], list):
-                    temp_stmt.extend(temp[1])
-                else:
-                    temp_stmt.append(temp[1])
-        tempBody.append(temp_var)
-        tempBody.append(temp_stmt)
+        # for x in ctx.body():
+        #     temp = self.visitBody(x)
+        #     if temp[0] == 0:
+        #         if isinstance(temp[1], list):
+        #             temp_var.extend(temp[1])
+        #         else:
+        #             temp_var.append(temp[1])
+        #     else:
+        #         if isinstance(temp[1], list):
+        #             temp_stmt.extend(temp[1])
+        #         else:
+        #             temp_stmt.append(temp[1])
+        getLstBody = self.visitBody(ctx.body())
+        tempBody.append(getLstBody[0])
+        tempBody.append(getLstBody[1])
         return (tempExpr, tempBody[0], tempBody[1])
 
     def visitElse_stmt(self,ctx:BKITParser.Else_stmtContext):
         tempBody = []
         temp_var = []
         temp_stmt = []
-        for x in ctx.body():
-            temp = self.visitBody(x)
-            if temp[0] == 0:
-                if isinstance(temp[1], list):
-                    temp_var.extend(temp[1])
-                else:
-                    temp_var.append(temp[1])
-            else:
-                if isinstance(temp[1], list):
-                    temp_stmt.extend(temp[1])
-                else:
-                    temp_stmt.append(temp[1])
-        tempBody.append(temp_var)
-        tempBody.append(temp_stmt)
+        # for x in ctx.body():
+        #     temp = self.visitBody(x)
+        #     if temp[0] == 0:
+        #         if isinstance(temp[1], list):
+        #             temp_var.extend(temp[1])
+        #         else:
+        #             temp_var.append(temp[1])
+        #     else:
+        #         if isinstance(temp[1], list):
+        #             temp_stmt.extend(temp[1])
+        #         else:
+        #             temp_stmt.append(temp[1])
+        getLstBody = self.visitBody(ctx.body())
+        tempBody.append(getLstBody[0])
+        tempBody.append(getLstBody[1])
         return (tempBody[0], tempBody[1])
 
     def visitFor_stmt(self, ctx:BKITParser.For_stmtContext):
@@ -450,20 +471,21 @@ class ASTGeneration(BKITVisitor):
         tempBody = []
         temp_var = []
         temp_stmt = []
-        for x in ctx.body():
-            temp = self.visitBody(x)
-            if temp[0] == 0:
-                if isinstance(temp[1], list):
-                    temp_var.extend(temp[1])
-                else:
-                    temp_var.append(temp[1])
-            else:
-                if isinstance(temp[1], list):
-                    temp_stmt.extend(temp[1])
-                else:
-                    temp_stmt.append(temp[1])
-        tempBody.append(temp_var)
-        tempBody.append(temp_stmt)
+        # for x in ctx.body():
+        #     temp = self.visitBody(x)
+        #     if temp[0] == 0:
+        #         if isinstance(temp[1], list):
+        #             temp_var.extend(temp[1])
+        #         else:
+        #             temp_var.append(temp[1])
+        #     else:
+        #         if isinstance(temp[1], list):
+        #             temp_stmt.extend(temp[1])
+        #         else:
+        #             temp_stmt.append(temp[1])
+        getLstBody = self.visitBody(ctx.body())
+        tempBody.append(getLstBody[0])
+        tempBody.append(getLstBody[1])
         getLoop = (tempBody[0], tempBody[1])
         return For(getID, getExpr1, getExpr2, getExpr3, getLoop)
 
@@ -494,20 +516,21 @@ class ASTGeneration(BKITVisitor):
         tempBody = []
         temp_var = []
         temp_stmt = []
-        for x in ctx.body():
-            temp = self.visitBody(x)
-            if temp[0] == 0:
-                if isinstance(temp[1], list):
-                    temp_var.extend(temp[1])
-                else:
-                    temp_var.append(temp[1])
-            else:
-                if isinstance(temp[1], list):
-                    temp_stmt.extend(temp[1])
-                else:
-                    temp_stmt.append(temp[1])
-        tempBody.append(temp_var)
-        tempBody.append(temp_stmt)
+        # for x in ctx.body():
+        #     temp = self.visitBody(x)
+        #     if temp[0] == 0:
+        #         if isinstance(temp[1], list):
+        #             temp_var.extend(temp[1])
+        #         else:
+        #             temp_var.append(temp[1])
+        #     else:
+        #         if isinstance(temp[1], list):
+        #             temp_stmt.extend(temp[1])
+        #         else:
+        #             temp_stmt.append(temp[1])
+        getLstBody = self.visitBody(ctx.body())
+        tempBody.append(getLstBody[0])
+        tempBody.append(getLstBody[1])
         getBody = (tempBody[0], tempBody[1])
         return Dowhile(getBody, getExpr)
 
@@ -520,20 +543,21 @@ class ASTGeneration(BKITVisitor):
         tempBody = []
         temp_var = []
         temp_stmt = []
-        for x in ctx.body():
-            temp = self.visitBody(x)
-            if temp[0] == 0:
-                if isinstance(temp[1], list):
-                    temp_var.extend(temp[1])
-                else:
-                    temp_var.append(temp[1])
-            else:
-                if isinstance(temp[1], list):
-                    temp_stmt.extend(temp[1])
-                else:
-                    temp_stmt.append(temp[1])
-        tempBody.append(temp_var)
-        tempBody.append(temp_stmt)
+        # for x in ctx.body():
+        #     temp = self.visitBody(x)
+        #     if temp[0] == 0:
+        #         if isinstance(temp[1], list):
+        #             temp_var.extend(temp[1])
+        #         else:
+        #             temp_var.append(temp[1])
+        #     else:
+        #         if isinstance(temp[1], list):
+        #             temp_stmt.extend(temp[1])
+        #         else:
+        #             temp_stmt.append(temp[1])
+        getLstBody = self.visitBody(ctx.body())
+        tempBody.append(getLstBody[0])
+        tempBody.append(getLstBody[1])
         getBody = (tempBody[0], tempBody[1])
         return While(getExpr, getBody)
 

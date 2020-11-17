@@ -2,7 +2,7 @@ import unittest
 from TestUtils import TestAST
 from AST import *
 
-from main.bkit.utils.AST import ArrayCell, ArrayLiteral, BinaryOp, IntLiteral, VarDecl
+from main.bkit.utils.AST import ArrayCell, ArrayLiteral, BinaryOp, BooleanLiteral, IntLiteral, VarDecl
 
 class ASTGenSuite(unittest.TestCase):
     def test_0(self):
@@ -3764,3 +3764,71 @@ Var: x = 1;"""
             input, 
             expect, 
             369))
+
+    def test_70(self):
+        input = r"""
+        Function: foo
+        Parameter: x, y, z[1]
+            Body:
+                ** Test If statement **
+                Var: x = True, y = False;
+                If True Then
+                EndIf.
+            EndBody."""
+        expect = Program(
+                [
+                    FuncDecl(
+                        Id("foo"),
+                        [
+                            VarDecl(
+                                Id("x"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("y"),
+                                [],
+                                None
+                            ),
+                            VarDecl(
+                                Id("z"),
+                                [1],
+                                None
+                            )
+                        ],
+                        (
+                            [
+                                VarDecl(
+                                    Id("x"),
+                                    [],
+                                    BooleanLiteral(True)
+                                ),
+                                VarDecl(
+                                    Id("y"),
+                                    [],
+                                    BooleanLiteral(False)
+                                )
+                            ],
+                            [
+                                If(
+                                    [
+                                        (
+                                            BooleanLiteral(True),
+                                            [],
+                                            []
+                                        )
+                                    ],
+                                    (
+                                        [],
+                                        []
+                                    )
+                                )
+                            ]
+                        )
+                    )
+                ]
+            )
+        self.assertTrue(TestAST.checkASTGen(
+            input, 
+            expect, 
+            370))
