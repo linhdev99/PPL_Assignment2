@@ -1265,3 +1265,495 @@ EndBody."""
             ]
         )
         self.assertTrue(TestAST.checkASTGen(input, expect, 343))
+
+    def test_44(self):
+        input = r"""Var:x;
+        Var: y[1] = True;
+        Var: z[2][3] = {{1,2,"text"},{True,False,0xA}};"""
+        expect = Program(
+            [
+                VarDecl(
+                    Id("x"),
+                    [],
+                    None
+                ),
+                VarDecl(
+                    Id("y"),
+                    [1],
+                    BooleanLiteral(True)
+                ),
+                VarDecl(
+                    Id("z"),
+                    [2,3],
+                    ArrayLiteral(
+                        [
+                            ArrayLiteral(
+                                [
+                                    IntLiteral(1),
+                                    IntLiteral(2),
+                                    StringLiteral("text")  
+                                ]
+                            ),
+                            ArrayLiteral(
+                                [
+                                    BooleanLiteral(True),
+                                    BooleanLiteral(False),
+                                    IntLiteral(10)
+                                ]
+                            )
+                        ]
+                    )
+                )
+            ]
+        )
+        self.assertTrue(TestAST.checkASTGen(
+            input,
+            expect,
+            344))
+
+    def test_45(self):
+        input = r"""
+        Var: x;
+        Var: y[1] = True;
+        Var: z[2][3] = {{1,2,"text"},{True,False,0xA}};
+        Function: main
+        Body:
+        EndBody.
+        """
+        expect = Program(
+            [
+                VarDecl(
+                    Id("x"),
+                    [],
+                    None
+                ),
+                VarDecl(
+                    Id("y"),
+                    [1],
+                    BooleanLiteral(True)
+                ),
+                VarDecl(
+                    Id("z"),
+                    [2,3],
+                    ArrayLiteral(
+                        [
+                            ArrayLiteral(
+                                [
+                                    IntLiteral(1),
+                                    IntLiteral(2),
+                                    StringLiteral("text")  
+                                ]
+                            ),
+                            ArrayLiteral(
+                                [
+                                    BooleanLiteral(True),
+                                    BooleanLiteral(False),
+                                    IntLiteral(10)
+                                ]
+                            )
+                        ]
+                    )
+                ),
+                FuncDecl(
+                    Id("main"),
+                    [],
+                    (
+                        [],
+                        []
+                    )
+                )
+            ]
+        )
+        self.assertTrue(TestAST.checkASTGen(
+            input,
+            expect,
+            345))
+
+    def test_46(self):
+        input = r"""
+        Var: x, y[1] = True, z[2][3] = {{1,2,"text"},{True,False,0xA}};
+        Function: main
+        Parameter: b, c
+        Body:
+        EndBody.
+        """
+        expect = Program(
+            [
+                VarDecl(
+                    Id("x"),
+                    [],
+                    None
+                ),
+                VarDecl(
+                    Id("y"),
+                    [1],
+                    BooleanLiteral(True)
+                ),
+                VarDecl(
+                    Id("z"),
+                    [2,3],
+                    ArrayLiteral(
+                        [
+                            ArrayLiteral(
+                                [
+                                    IntLiteral(1),
+                                    IntLiteral(2),
+                                    StringLiteral("text")  
+                                ]
+                            ),
+                            ArrayLiteral(
+                                [
+                                    BooleanLiteral(True),
+                                    BooleanLiteral(False),
+                                    IntLiteral(10)
+                                ]
+                            )
+                        ]
+                    )
+                ),
+                FuncDecl(
+                    Id("main"),
+                    [
+                        VarDecl(
+                            Id("b"),
+                            [],
+                            None
+                        ),
+                        VarDecl(
+                            Id("c"),
+                            [],
+                            None
+                        )
+                    ],
+                    (
+                        [],
+                        []
+                    )
+                )
+            ]
+        )
+        self.assertTrue(TestAST.checkASTGen(
+            input,
+            expect,
+            346))
+
+    def test_47(self):
+        input = r"""
+        Var: x, y[1] = True, z[2][3] = {{1,2,"text"},{True,False,0xA}};
+        Function: main
+        Parameter: b, c, d[10][10]
+        Body:
+            Var: a = 1710165;
+        EndBody.
+        """
+        expect = Program(
+            [
+                VarDecl(
+                    Id("x"),
+                    [],
+                    None
+                ),
+                VarDecl(
+                    Id("y"),
+                    [1],
+                    BooleanLiteral(True)
+                ),
+                VarDecl(
+                    Id("z"),
+                    [2,3],
+                    ArrayLiteral(
+                        [
+                            ArrayLiteral(
+                                [
+                                    IntLiteral(1),
+                                    IntLiteral(2),
+                                    StringLiteral("text")  
+                                ]
+                            ),
+                            ArrayLiteral(
+                                [
+                                    BooleanLiteral(True),
+                                    BooleanLiteral(False),
+                                    IntLiteral(10)
+                                ]
+                            )
+                        ]
+                    )
+                ),
+                FuncDecl(
+                    Id("main"),
+                    [
+                        VarDecl(
+                            Id("b"),
+                            [],
+                            None
+                        ),
+                        VarDecl(
+                            Id("c"),
+                            [],
+                            None
+                        ),
+                        VarDecl(
+                            Id("d"),
+                            [10,10],
+                            None
+                        )
+                    ],
+                    (
+                        [
+                            VarDecl(
+                                Id("a"),
+                                [],
+                                IntLiteral(1710165)
+                            )
+                        ],
+                        []
+                    )
+                )
+            ]
+        )
+        self.assertTrue(TestAST.checkASTGen(
+            input,
+            expect,
+            347))
+
+    def test_48(self):
+        input = r"""
+        Var: x, y[1] = True, z[2][3] = {{1,2,"text"},{True,False,0xA}};
+        Function: main
+        Parameter: b, c, d[10][10]
+        Body:
+            Var: a = 1710165;
+            Var: r = 3.1415;
+            b = -(a + r) * -c;
+        EndBody.
+        """
+        expect = Program(
+            [
+                VarDecl(
+                    Id("x"),
+                    [],
+                    None
+                ),
+                VarDecl(
+                    Id("y"),
+                    [1],
+                    BooleanLiteral(True)
+                ),
+                VarDecl(
+                    Id("z"),
+                    [2,3],
+                    ArrayLiteral(
+                        [
+                            ArrayLiteral(
+                                [
+                                    IntLiteral(1),
+                                    IntLiteral(2),
+                                    StringLiteral("text")  
+                                ]
+                            ),
+                            ArrayLiteral(
+                                [
+                                    BooleanLiteral(True),
+                                    BooleanLiteral(False),
+                                    IntLiteral(10)
+                                ]
+                            )
+                        ]
+                    )
+                ),
+                FuncDecl(
+                    Id("main"),
+                    [
+                        VarDecl(
+                            Id("b"),
+                            [],
+                            None
+                        ),
+                        VarDecl(
+                            Id("c"),
+                            [],
+                            None
+                        ),
+                        VarDecl(
+                            Id("d"),
+                            [10,10],
+                            None
+                        )
+                    ],
+                    (
+                        [
+                            VarDecl(
+                                Id("a"),
+                                [],
+                                IntLiteral(1710165)
+                            ),
+                            VarDecl(
+                                Id("r"),
+                                [],
+                                FloatLiteral(3.1415)
+                            )
+                        ],
+                        [
+                            Assign(
+                                Id("b"),
+                                BinaryOp(
+                                    "*",
+                                    UnaryOp(
+                                        "-",
+                                        BinaryOp(
+                                            "+",
+                                            Id("a"),
+                                            Id("r")
+                                        )
+                                    ),
+                                    UnaryOp(
+                                        "-",
+                                        Id("c")
+                                    )
+                                )
+                            )
+                        ]
+                    )
+                )
+            ]
+        )
+        self.assertTrue(TestAST.checkASTGen(
+            input,
+            expect,
+            348))
+
+    def test_49(self):
+        input = r"""
+        Var: x, y[1] = True, z[2][3] = {{1,2,"text"},{True,False,0xA}};
+        Function: main
+        Parameter: b, c, d[10][10]
+        Body:
+            Var: a = 1710165;
+            Var: r = 3.1415;
+            b = -(a + r) * -c;
+            d[1][1] = !(y[1] && z[1][0]);
+        EndBody.
+        """
+        expect = Program(
+            [
+                VarDecl(
+                    Id("x"),
+                    [],
+                    None
+                ),
+                VarDecl(
+                    Id("y"),
+                    [1],
+                    BooleanLiteral(True)
+                ),
+                VarDecl(
+                    Id("z"),
+                    [2,3],
+                    ArrayLiteral(
+                        [
+                            ArrayLiteral(
+                                [
+                                    IntLiteral(1),
+                                    IntLiteral(2),
+                                    StringLiteral("text")  
+                                ]
+                            ),
+                            ArrayLiteral(
+                                [
+                                    BooleanLiteral(True),
+                                    BooleanLiteral(False),
+                                    IntLiteral(10)
+                                ]
+                            )
+                        ]
+                    )
+                ),
+                FuncDecl(
+                    Id("main"),
+                    [
+                        VarDecl(
+                            Id("b"),
+                            [],
+                            None
+                        ),
+                        VarDecl(
+                            Id("c"),
+                            [],
+                            None
+                        ),
+                        VarDecl(
+                            Id("d"),
+                            [10,10],
+                            None
+                        )
+                    ],
+                    (
+                        [
+                            VarDecl(
+                                Id("a"),
+                                [],
+                                IntLiteral(1710165)
+                            ),
+                            VarDecl(
+                                Id("r"),
+                                [],
+                                FloatLiteral(3.1415)
+                            )
+                        ],
+                        [
+                            Assign(
+                                Id("b"),
+                                BinaryOp(
+                                    "*",
+                                    UnaryOp(
+                                        "-",
+                                        BinaryOp(
+                                            "+",
+                                            Id("a"),
+                                            Id("r")
+                                        )
+                                    ),
+                                    UnaryOp(
+                                        "-",
+                                        Id("c")
+                                    )
+                                )
+                            ),
+                            Assign(
+                                ArrayCell(
+                                    Id("d"),
+                                    [
+                                        IntLiteral(1),
+                                        IntLiteral(1)
+                                    ]
+                                ),
+                                UnaryOp(
+                                    "!",
+                                    BinaryOp(
+                                        "&&",
+                                        ArrayCell(
+                                            Id("y"),
+                                            [
+                                                IntLiteral(1)
+                                            ]
+                                        ),
+                                        ArrayCell(
+                                            Id("z"),
+                                            [
+                                                IntLiteral(1),
+                                                IntLiteral(0)
+                                            ]
+                                        )
+                                    )
+                                )
+                            )
+                        ]
+                    )
+                )
+            ]
+        )
+        self.assertTrue(TestAST.checkASTGen(
+            input,
+            expect,
+            349))
