@@ -67,7 +67,7 @@ stmt_spe: assign_stmt SEMI
 body_declare: BODY COLON body* ENDBODY DOT;
 
 //assign statement
-assign_stmt: exp EQ exp;
+assign_stmt: ID op_index* EQ exp;
 //assign_part: exp;
 //assign_part: (scalar_var | ((func_call | STRINGLIT | array_cell)) index_var*);
 // function declare

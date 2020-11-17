@@ -2,7 +2,7 @@ import unittest
 from TestUtils import TestAST
 from AST import *
 
-from main.bkit.utils.AST import ArrayLiteral, CallExpr, IntLiteral, StringLiteral, VarDecl
+from main.bkit.utils.AST import ArrayCell, ArrayLiteral, CallExpr, IntLiteral, StringLiteral, VarDecl
 
 class ASTGenSuite(unittest.TestCase):
     def test_0(self):
@@ -430,7 +430,7 @@ EndBody."""
         input = r"""
         Function: foo
             Body:
-                {1,2,3}[2] = 5;
+                a[2] = 5;
             EndBody."""
         expect = Program(
                 [FuncDecl(Id("foo"),[],
@@ -439,14 +439,8 @@ EndBody."""
                               [
                                   Assign(
                                     ArrayCell(
-                                    ArrayLiteral(
-                                        [
-                                        IntLiteral(1),
-                                        IntLiteral(2),
-                                        IntLiteral(3),
-                                        ]
-                                    ),
-                                    [IntLiteral(2)]
+                                        Id("a"),
+                                        [IntLiteral(2)]
                                     ),
                                     IntLiteral(5)
                                   )
@@ -3260,3 +3254,39 @@ Var: x = 1;"""
             input,
             expect,
             360))
+
+    def test_61(self):
+        input = r"""
+        Function: foo
+            Body:
+                a[2][foo()][b[1]] = 5;
+            EndBody."""
+        expect = Program(
+                [FuncDecl(Id("foo"),[],
+                          (
+                              [],
+                              [
+                                  Assign(
+                                    ArrayCell(
+                                        Id("a"),
+                                        [
+                                            IntLiteral(2),
+                                            CallExpr(
+                                                Id("foo"),
+                                                []
+                                            ),
+                                            ArrayCell(
+                                                Id("b"),
+                                                [
+                                                    IntLiteral(1)
+                                                ]
+                                            )
+                                        ]
+                                    ),
+                                    IntLiteral(5)
+                                  )
+                              ]
+                          ))
+                ]
+                )
+        self.assertTrue(TestAST.checkASTGen(input, expect, 361))

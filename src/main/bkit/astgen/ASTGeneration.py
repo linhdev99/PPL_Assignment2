@@ -2,6 +2,8 @@ from BKITVisitor import BKITVisitor
 from BKITParser import BKITParser
 from AST import *
 
+from main.bkit.utils.AST import ArrayCell
+
 class ASTGeneration(BKITVisitor):
     def visitProgram(self,ctx:BKITParser.ProgramContext):
         mainList = []
@@ -336,8 +338,20 @@ class ASTGeneration(BKITVisitor):
         return temp
 
     def visitAssign_stmt(self, ctx:BKITParser.Assign_stmtContext):
-        temp_lhs = self.visitExp(ctx.exp(0))
-        temp_rhs = self.visitExp(ctx.exp(1))
+        temp_lhs = None
+        getID = Id(ctx.ID().getText())
+        if ctx.op_index():
+            lstOpIdx = []
+            for x in ctx.op_index():
+                getOpIdx = self.visitOp_index(x)
+                if isinstance(getOpIdx, list):
+                    lstOpIdx.extend(getOpIdx if getOpIdx else [])
+                else:
+                    lstOpIdx.append(getOpIdx)
+            temp_lhs = ArrayCell(getID, lstOpIdx)
+        else:
+            temp_lhs = getID
+        temp_rhs = self.visitExp(ctx.exp())
         return Assign(temp_lhs, temp_rhs)
 
     def visitScalar_var(self,ctx:BKITParser.Scalar_varContext):
